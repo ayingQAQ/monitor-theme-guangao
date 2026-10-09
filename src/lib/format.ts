@@ -93,7 +93,11 @@ export function money(amount: number, currency: string): string {
   try {
     let format = MONEY.get(currency)
     if (!format) {
-      format = new Intl.NumberFormat("zh-CN", { style: "currency", currency, maximumFractionDigits: 2 })
+      format = new Intl.NumberFormat("zh-CN", {
+        style: "currency", currency, maximumFractionDigits: 2,
+        // Keep the full Canadian dollar code instead of the locale's CA$ abbreviation.
+        currencyDisplay: currency === "CAD" ? "code" : "symbol",
+      })
       MONEY.set(currency, format)
     }
     return format.format(amount)

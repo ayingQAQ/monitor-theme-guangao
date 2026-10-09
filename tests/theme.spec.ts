@@ -2,6 +2,20 @@ import { test, expect } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 import { demoNodes } from "../dev/fixtures";
 
+test("Canadian dollar cards display the complete CAD code on desktop and mobile", async ({ page }) => {
+  await page.routeWebSocket("**/api/ws*", () => {});
+  await page.route("**/api/nodes", (route) => route.fulfill({ json: {
+    nodes: [{ ...demoNodes[0], currency: "CAD", price: 4.5 }],
+  } }));
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const price = page.locator(".offer-price > strong");
+    await expect(price).toHaveText(/^CAD\s+4\.50$/);
+    expect(await price.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+  }
+});
+
 test("ticker moves continuously to the right on desktop and mobile", async ({ page }) => {
   for (const width of [1440, 390]) {
     await page.setViewportSize({ width, height: 900 });

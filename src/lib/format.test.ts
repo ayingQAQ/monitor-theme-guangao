@@ -181,6 +181,7 @@ eq(["yearly", "12m", "60m", "18m", "once", "weekly"].map(cycle), ["年付", "年
 // money: zh-CN whatever the browser's language, so US$ stands apart from HK$
 // and JP¥ from ¥; a code Intl refuses is shown rather than thrown.
 eq(money(100, "CNY"), "¥100.00", "人民币")
+eq(money(4.5, "CAD"), "CAD\u00a04.50", "加元显示完整 CAD 代码")
 eq(money(100, "USD"), "US$100.00", "美元与港币等其它元区分开")
 eq(money(100, "HKD"), "HK$100.00", "港币同样符号在前")
 eq(money(1200, "JPY"), "JP¥1,200", "日元不带小数，与人民币分开")
