@@ -83,21 +83,15 @@ const TOOLTIP = {
 // and a rate axis of 1 KB/s to 100 MB/s its 10 MB/s label and two gridlines.
 const VALUE_AXIS = { ...AXIS, width: 68, interval: 0 }
 
-// The palette is greyscale, so lightness alone is exhausted after two or three
-// series and the dash pattern carries the rest.
-// ponytail: the dash period is shorter than the jitter once every ping in the
-// window is on the chart, so at the day range a dotted line and a dashed one both
-// read as texture and only lightness separates them. A muted colour palette was
-// built and measured but not adopted; restoring it means five oklch pairs and
-// dropping `dash`.
+// Dedicated latency colours keep probes distinct without changing resource charts.
+// Dash patterns provide a second cue, and hiding a probe keeps its assigned colour.
 const PALETTE = [
-  { stroke: "var(--color-chart-1)", dash: undefined },
-  { stroke: "var(--color-chart-3)", dash: "6 3" },
-  { stroke: "var(--color-chart-2)", dash: "2 3" },
-  { stroke: "var(--color-chart-4)", dash: "10 4 2 4" },
-  { stroke: "var(--color-chart-5)", dash: "1 4" },
+  { stroke: "var(--latency-1)", dash: undefined },
+  { stroke: "var(--latency-2)", dash: "6 3" },
+  { stroke: "var(--latency-3)", dash: "2 3" },
+  { stroke: "var(--latency-4)", dash: "10 4 2 4" },
+  { stroke: "var(--latency-5)", dash: "1 4" },
 ]
-
 const TABS = [
   { key: "resources", label: "资源" },
   { key: "latency", label: "网络延迟" },

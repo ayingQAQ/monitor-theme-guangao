@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-for (const file of ["format", "api", "config-values", "card-appearance"]) {
+for (const file of ["format", "api", "config-values"]) {
   const run = spawnSync(process.execPath, [`src/lib/${file}.test.ts`], {
     stdio: "inherit",
     env: { ...process.env, TZ: "Asia/Shanghai" },

@@ -465,8 +465,13 @@ export default function App() {
               </div>
             ) : (
               <div className="node-grid">
-                {shown.map((node) => (
-                  <MonitorCard key={node.id} node={node} onOpen={go} />
+                {shown.map((node, index) => (
+                  <MonitorCard
+                    key={node.id}
+                    node={node}
+                    index={index}
+                    onOpen={go}
+                  />
                 ))}
               </div>
             )}
