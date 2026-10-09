@@ -1,10 +1,10 @@
 {
   "name": "广告墙 · Guangao",
-  "short": "guangao-theme",
+  "short": "monitor-theme-guangao",
   "description": "满屏都是广告，点开全是探针。三种高饱和广告墙样式。",
   "version": "0.1.0",
   "author": "ayingQAQ",
-  "url": "https://github.com/ayingQAQ/guangao-theme",
+  "url": "https://github.com/ayingQAQ/monitor-theme-guangao",
   "config": [
     {
       "key": "variant",

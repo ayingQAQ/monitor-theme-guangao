@@ -34,6 +34,8 @@ await rm(stage, { recursive: true, force: true });
 await mkdir(stage, { recursive: true });
 await cp("dist", path.join(stage, "dist"), { recursive: true });
 await cp("theme.json", path.join(stage, "theme.json"));
+for (const notice of ["LICENSE", "THIRD_PARTY.md", "THIRD_PARTY_NOTICES.txt"])
+  await cp(notice, path.join(stage, notice));
 await cp("preview.png", path.join(stage, "preview.png"));
 await stat(path.join(stage, "dist/index.html"));
 let count = 0,

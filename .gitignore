@@ -21,3 +21,12 @@ Thumbs.db
 test-results/
 playwright-report/
 .playwright-mcp/
+.claude/
+# Local deployment helpers and internal records are not part of the public theme.
+scripts/bootstrap-hub.mjs
+scripts/deploy-hub.sh
+scripts/deploy-theme.mjs
+scripts/verify-hub.mjs
+docs/design.md
+docs/verification.md
+docs/superpowers/

@@ -2,6 +2,117 @@ import { test, expect } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 import { demoNodes } from "../dev/fixtures";
 
+test("history requests follow hub retention and request only the selected series", async ({ page }) => {
+  await page.route("**/api/me", (route) => route.fulfill({ json: {
+    authed: false, site_name: "协议检查", public_page: true, history_days: 30,
+  } }));
+  await page.goto("/node/1");
+  const resources = page.waitForRequest((request) => request.url().includes("/metrics?") && new URL(request.url()).searchParams.get("hours") === "720");
+  await page.getByRole("button", { name: "30 天", exact: true }).click();
+  expect(new URL((await resources).url()).searchParams.get("series")).toBe("metrics");
+  await expect(page.getByRole("button", { name: "90 天", exact: true })).toHaveCount(0);
+  const ping = page.waitForRequest((request) => new URL(request.url()).searchParams.get("series") === "ping");
+  await page.getByRole("button", { name: "网络延迟", exact: true }).click();
+  expect(new URL((await ping).url()).searchParams.get("hours")).toBe("6");
+});
+
+test("hidden pages stop live work and visible pages fetch and reconnect immediately", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-10T00:00:00Z") });
+  await page.clock.pauseAt(new Date("2026-10-10T00:00:01Z"));
+  let requests = 0, connections = 0;
+  await page.route("**/api/nodes", (route) => {
+    requests++;
+    return route.fulfill({ json: { nodes: demoNodes } });
+  });
+  await page.routeWebSocket("**/api/ws*", () => { connections++; });
+  await page.goto("/");
+  await expect(page.getByRole("article")).toHaveCount(6);
+  const initial = { requests, connections };
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", { configurable: true, value: true });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await page.clock.fastForward(20000);
+  expect({ requests, connections }).toEqual(initial);
+  await page.evaluate(() => {
+    Object.defineProperty(document, "hidden", { configurable: true, value: false });
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+  await expect.poll(() => requests).toBeGreaterThan(initial.requests);
+  await expect.poll(() => connections).toBeGreaterThan(initial.connections);
+});
+
+test("a delayed REST snapshot cannot replace newer WebSocket data", async ({ page }) => {
+  let release!: () => void;
+  const held = new Promise<void>((resolve) => { release = resolve; });
+  await page.route("**/api/nodes", async (route) => {
+    await held;
+    await route.fulfill({ json: { nodes: [demoNodes[0]] } });
+  });
+  await page.routeWebSocket("**/api/ws*", (stream) => {
+    stream.send(JSON.stringify({ nodes: [{ ...demoNodes[0], metrics: { ...demoNodes[0].metrics, cpu: 72.5 } }] }));
+  });
+  await page.goto("/");
+  const cpu = page.getByRole("article", { name: demoNodes[0].name }).getByText("72.5%", { exact: true });
+  await expect(cpu).toBeVisible();
+  const response = page.waitForResponse("**/api/nodes");
+  release();
+  await response;
+  await page.waitForTimeout(200);
+  await expect(cpu).toBeVisible();
+});
+
+test("invalid snapshot envelopes do not keep a broken stream alive", async ({ page }) => {
+  await page.clock.install({ time: new Date("2026-10-10T00:00:00Z") });
+  await page.clock.pauseAt(new Date("2026-10-10T00:00:01Z"));
+  let connections = 0;
+  let stream: Parameters<Parameters<typeof page.routeWebSocket>[1]>[0];
+  await page.routeWebSocket("**/api/ws*", (socket) => { connections++; stream = socket; });
+  await page.goto("/");
+  await expect(page.getByRole("article")).toHaveCount(6);
+  const initialConnections = connections;
+  await page.clock.fastForward(9000);
+  const dropped = page.waitForEvent("console", (message) => message.text().includes("live frame dropped:"));
+  stream!.send(JSON.stringify({ nodes: null }));
+  await dropped;
+  await page.clock.fastForward(2000);
+  await expect.poll(() => connections).toBeGreaterThan(initialConnections);
+});
+
+test("allowance coupons distinguish remaining, exhausted and unlimited traffic", async ({
+  page,
+}) => {
+  await page.routeWebSocket("**/api/ws*", () => {});
+  await page.route("**/api/nodes", (route) =>
+    route.fulfill({
+      json: {
+        admin: false,
+        nodes: [
+          demoNodes[0],
+          { ...demoNodes[1], month_used: demoNodes[1].traffic_limit + 1 },
+          { ...demoNodes[2], traffic_limit: 0 },
+        ],
+      },
+    }),
+  );
+  await page.goto("/");
+  const remaining = page
+    .getByRole("article", { name: demoNodes[0].name })
+    .locator(".traffic-row");
+  await expect(remaining).toContainText("820 GB");
+  await expect(remaining).toContainText("82%");
+  const exhausted = page
+    .getByRole("article", { name: demoNodes[1].name })
+    .locator(".traffic-row");
+  await expect(exhausted.locator(".traffic-copy > strong")).toHaveText("0 B");
+  await expect(exhausted).toContainText("额度用尽");
+  await expect(
+    page
+      .getByRole("article", { name: demoNodes[2].name })
+      .locator(".traffic-row"),
+  ).toContainText("不限量");
+});
+
 test("advertisement cards show real values and distinguish offline and pending metrics", async ({
   page,
 }) => {
@@ -32,7 +143,7 @@ test("group filtering updates both cards and summary", async ({ page }) => {
 test("groups with no live reports do not invent zero throughput", async ({
   page,
 }) => {
-  await page.route("**/api/themes/guangao-theme/config", (route) =>
+  await page.route("**/api/themes/monitor-theme-guangao/config", (route) =>
     route.fulfill({ json: { show_float: true } }),
   );
   await page.goto("/");
@@ -78,7 +189,8 @@ test("visitor variant preference survives reload and invalid saved values fall b
   page,
 }) => {
   await page.goto("/");
-  await page.getByLabel("广告墙风格").selectOption("neon");
+  await page.getByRole("combobox", { name: "广告墙风格" }).click();
+  await page.getByRole("option", { name: "紫绿广告墙" }).click();
   await expect(page.locator(".ad-app")).toHaveAttribute("data-variant", "neon");
   await page.reload();
   await expect(page.locator(".ad-app")).toHaveAttribute("data-variant", "neon");
@@ -231,7 +343,7 @@ test("mobile stays within viewport and reduced motion disables animated decorati
 test("station text is escaped and a config failure uses manifest defaults", async ({
   page,
 }) => {
-  await page.route("**/api/themes/guangao-theme/config", (route) =>
+  await page.route("**/api/themes/monitor-theme-guangao/config", (route) =>
     route.fulfill({
       json: {
         notice: "<img src=x onerror=alert(1)>",
@@ -250,7 +362,7 @@ test("station text is escaped and a config failure uses manifest defaults", asyn
     "promo",
   );
   await page.unrouteAll();
-  await page.route("**/api/themes/guangao-theme/config", (route) =>
+  await page.route("**/api/themes/monitor-theme-guangao/config", (route) =>
     route.fulfill({ status: 404, body: "missing" }),
   );
   await page.reload();

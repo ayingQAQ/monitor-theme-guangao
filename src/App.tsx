@@ -1,5 +1,13 @@
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { ArrowLeft, ArrowUpRight, Radio, Zap } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Radio,
+  Zap,
+  ChevronDown,
+  Check,
+} from "lucide-react";
+import { Select } from "radix-ui";
 import { api, groupsOf, useNodes } from "@/lib/api";
 import { loadConfig } from "@/lib/config";
 import { bytes, rate } from "@/lib/format";
@@ -394,19 +402,52 @@ export default function App() {
         <div className="visitor-controls">
           <label>
             换个广告皮肤
-            <select
-              aria-label="广告墙风格"
-              value={preference}
-              onChange={(event) => {
-                setPreference(event.target.value);
-                writePreference("guangao.variant", event.target.value);
+            <Select.Root
+              value={preference || "site"}
+              onValueChange={(value) => {
+                const next = value === "site" ? "" : value;
+                setPreference(next);
+                writePreference("guangao.variant", next);
               }}
             >
-              <option value="">跟随站点</option>
-              <option value="promo">红黄促销墙</option>
-              <option value="neon">紫绿广告墙</option>
-              <option value="retro">复古 GIF 广告墙</option>
-            </select>
+              <Select.Trigger
+                className="theme-select-trigger"
+                aria-label="广告墙风格"
+              >
+                <Select.Value />
+                <Select.Icon>
+                  <ChevronDown size={14} />
+                </Select.Icon>
+              </Select.Trigger>
+              <Select.Content
+                className="theme-select-menu"
+                position="popper"
+                side="top"
+                align="end"
+                sideOffset={10}
+                collisionPadding={16}
+              >
+                <Select.Viewport>
+                  {[
+                    ["site", "跟随站点"],
+                    ["promo", "红黄促销墙"],
+                    ["neon", "紫绿广告墙"],
+                    ["retro", "复古 GIF 广告墙"],
+                  ].map(([value, label]) => (
+                    <Select.Item
+                      key={value}
+                      value={value}
+                      className="theme-select-option"
+                    >
+                      <Select.ItemText>{label}</Select.ItemText>
+                      <Select.ItemIndicator>
+                        <Check size={14} />
+                      </Select.ItemIndicator>
+                    </Select.Item>
+                  ))}
+                </Select.Viewport>
+              </Select.Content>
+            </Select.Root>
           </label>
           <button
             aria-pressed={motionStopped}

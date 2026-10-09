@@ -1,87 +1,116 @@
-# guangao-theme
+# monitor-theme-guangao
 
-Monitor 公开状态页主题：整页呈现夸张、密集的广告墙视觉，实际展示服务器探针信息。
+为 [Monitor](https://github.com/monitor-probe/monitor) 打造的「牛皮癣广告墙」公开状态页主题：促销横幅、手绘纸边、探照光影和流量票券，展示真实探针数据。
 
-## 当前状态
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/ayingQAQ/monitor-theme-guangao)](https://github.com/ayingQAQ/monitor-theme-guangao/releases/latest)
 
-已完成 v0.1.0：三种广告墙样式、节点分组、资源指标、费用与到期信息、历史资源曲线和延迟曲线。已安装在独立的预览 Hub 上。
+## 截图
 
-![红黄促销墙预览](docs/previews/promo.png)
+以下截图全部来自明确标记的开发演示数据，不包含真实服务器信息。桌面三列卡片保持等比例缩放，手机使用单列布局。
 
-截图使用明确标识的开发演示数据，不代表真实服务器。[紫绿版](docs/previews/neon.png)、[复古版](docs/previews/retro.png)、[手机布局](docs/previews/mobile.png)。
+### 红黄促销墙
+
+![红黄促销墙](docs/previews/promo.png)
+
+### 紫绿广告墙
+
+![紫绿广告墙](docs/previews/neon.png)
+
+### 复古 GIF 广告墙
+
+![复古 GIF 广告墙](docs/previews/retro.png)
+
+### 手机预览
+
+<img src="docs/previews/mobile.png" alt="手机预览" width="390" />
+
+## 功能
+
+- 三种广告墙皮肤、手绘选择菜单、动效与边框灯开关。
+- CPU、内存、硬盘、本月剩余流量、上传与下载速度。
+- 分组筛选与对应汇总，费用、账期、到期和离线状态。
+- 节点详情、资源历史与延迟曲线，查询范围跟随 Hub 保留天数。
+- 文本与 gzip WebSocket 快照、断线恢复及页面后台暂停。
+- 站长在 Monitor 后台保存主题设置；访客偏好仅保存在当前浏览器。
+- 遵循系统减少动态效果设置；生产包不包含演示接口或演示节点数据。
+
+## 安装
+
+在 Monitor 后台的主题页选择「从 GitHub 安装」，填写：
+
+```text
+https://github.com/ayingQAQ/monitor-theme-guangao
+```
+
+也可以从 [最新正式 Release](https://github.com/ayingQAQ/monitor-theme-guangao/releases/latest) 下载 `theme.tar.gz`，在后台上传并选择「广告墙 · Guangao」。请下载主题包，而不是 GitHub 自动生成的 Source code 压缩包。
+
+主题短名为 `monitor-theme-guangao`，安装包解压结构：
+
+```text
+monitor-theme-guangao/
+├── theme.json
+├── preview.png
+├── LICENSE
+├── THIRD_PARTY.md
+├── THIRD_PARTY_NOTICES.txt
+└── dist/
+    └── index.html
+```
+
+后台主题设置支持皮肤、横幅标题、纯文本公告、汇总、浮窗和动效。后台及登录页由 Hub 提供。
+
+从旧短名 `guangao-theme` 升级时，新主题会作为独立条目安装，需要重新选择并保存站点主题设置。
 
 ## 本地开发
 
-需要 Node.js 24.11+，依赖版本由 package-lock.json 固定。
+需要 Node.js 24.11+。
 
 ```sh
 npm ci
 npm run dev:demo
 ```
 
-访问 http://127.0.0.1:5173。页脚可切换三种皮肤、停止动效；这些访客偏好仅影响当前浏览器。开发演示接口仅在 `dev:demo` 中启用，不会进入正式构建。
+打开 `http://127.0.0.1:5173`。页面会标明「演示数据 · 非真实节点」。
 
-使用真实 Hub 数据时，先在另一个终端建立隧道，再运行普通开发服务器：
+使用真实公开 Hub 时，设置 `MONITOR_HUB` 后运行 `npm run dev`：
 
 ```sh
-ssh -N -L 127.0.0.1:9911:127.0.0.1:9911 example-host
+# Linux / macOS
+MONITOR_HUB=https://your-monitor.example.com npm run dev
+```
+
+```powershell
+# PowerShell
+$env:MONITOR_HUB = 'https://your-monitor.example.com'
 npm run dev
 ```
 
-Vite 默认代理 `/api` 和 WebSocket 到 http://127.0.0.1:9911，也支持 `MONITOR_HUB` 环境变量指定其他公开 Hub。
+开发服务器只监听本机，代理同源 `/api` 请求和 WebSocket；没有设置变量时，默认连接 `http://127.0.0.1:9911`。
 
-## 构建与安装
+## 验证与打包
 
 ```sh
 npm test
 npm run lint
 npm run build
+npx playwright install chromium
+npm run test:e2e
 npm run package
 ```
 
-在 Monitor 后台的主题页上传 `theme.tar.gz`，选择「广告墙 · Guangao」即可，无需重启。主题目录也可放入 Hub 的 `--themes` 目录。
+`npm run package` 生成 `theme.tar.gz`，校验清单、目录名、文件类型、体积限制和 gzip 完整性。发布时使用与 `theme.json.version` 对应的正式 tag，Release 附件名保持 `theme.tar.gz`。
 
-仓库当前为私有，Hub 无法通过公开 GitHub 下载接口直接安装或自动更新它；私有阶段使用本地主题包上传。后台主题设置控制站点配色、公告、标题、汇总、浮窗和动效，值由 Hub 保存。
+截图更新：先运行演示服务器，再执行 `node scripts/capture.mjs`。脚本仅接受标记为演示数据的页面。
 
-主题使用 `/node/{id}` 详情路由，反向代理或 WAF 如有路径白名单，须放行它以及 `/favicon.svg` 和 `/apple-touch-icon.png`。后台 `/admin/*`、API 和 agent 路由由 Hub 处理。
+[接口检查记录](docs/protocol-audit.md) 列出了测试范围与实测限制。`node scripts/audit-hub.mjs` 可对 `MONITOR_HUB` 指定的公开 Hub 做只读协议检查。
 
-## 验证
+反向代理或 WAF 应放行 `/`、`/node/{id}`、`/favicon.svg` 和 `/apple-touch-icon.png`，以及 Monitor 自身的 API 和后台路径。
 
-```sh
-npx playwright install chromium
-npm run test:e2e
-```
+## 开发依据与许可
 
-测试覆盖压缩与文本 WebSocket 更新、分组、配置默认值、离线/未上报/真实零速、异常数据、HTML 错误回复、详情刷新和浏览器前进后退、手机布局、减少动态效果和文本转义。
+遵循 [主题开发指南](https://monitor-document.pages.dev/dev/theme) 和 [架构与协议](https://monitor-document.pages.dev/dev/architecture)。
 
-开发截图可用 `node scripts/capture.mjs` 更新，需要演示服务器正在 5173 端口运行。该脚本同时生成 `preview.png` 和不透明的 180×180 Apple 图标。
+本项目采用 [MIT License](LICENSE)。数据接口、格式化、历史图表和部分共享组件参考 [monitor-theme-default](https://github.com/monitor-probe/monitor-theme-default)，保留原作者版权声明。来源版本见 [THIRD_PARTY.md](THIRD_PARTY.md)，依赖许可见 [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt)。手绘视觉参考 [PaperCSS](https://github.com/papercss/papercss) 与 [Wired Elements](https://github.com/rough-stuff/wired-elements) 的设计理念，未引入它们的组件代码。
 
-## 设计方向
-
-- 红黄促销墙：撞色横幅、描边大字、爆炸贴纸。
-- 紫绿广告墙：渐变、立体字、发光边框。
-- 复古 GIF 广告墙：像素边框、低帧率灯牌。
-- 广告卡片展示真实节点指标，按钮进入节点详情；不包含真实广告。
-- 手机支持单列布局，动效支持减少动态效果。
-
-## 开发依据
-
-必须遵循 [Monitor 官方主题开发指南](https://monitor-document.pages.dev/dev/theme)，并参考 [官方默认主题](https://github.com/monitor-probe/monitor-theme-default)。
-
-主题短名约定为 `guangao-theme`，目录与 `theme.json` 中的 `short` 保持一致。主题是纯静态 SPA，仅使用官方规定的同源接口；后台与登录页由 Hub 提供。
-
-最终安装包为 `theme.tar.gz`，包含 `guangao-theme/theme.json`、可选的 `preview.png` 和 `dist/index.html`。站点设置在 `theme.json.config` 中声明并由 Hub 保存；实时数据、缺失字段、错误处理、历史范围、分组、图标及路由均遵循指南。
-
-## 部署边界
-
-Hub 已独立部署在 example-host，仅监听 `127.0.0.1:9911`，通过 SSH 隧道访问。使用 `/opt/monitor-theme-hub` 独立目录、`monitor-theme-hub` 服务账户、数据库和主题目录，内存上限 256 MB。
-
-正式 Hub 当前没有接入节点，页面如实显示空状态。部署未修改、重启或迁移 VPS 上已有的 monitor-agent、komari-agent，也未改变其上报目标。
-
-`node scripts/bootstrap-hub.mjs <ssh别名>` 仅用于新建部署，遇到已有目录或服务会退出。`node scripts/deploy-theme.mjs <ssh别名>` 上传主题并检查现有 agent 的文件哈希、PID 和重启次数。辅助脚本只面向这台已检查的 VPS，Hub 管理凭据保存在被 Git 忽略的 `.cache/hub-access.txt`；不会写入源码或命令参数。
-
-本仓库不得提交服务器凭据、agent token、环境文件或数据库。演示数据须明确标识并与正式数据隔离。
-
-## 许可与参考来源
-
-MIT，见 LICENSE。官方参考实现的版权声明保留在 LICENSE，来源版本和改动边界见 THIRD_PARTY.md。
+请勿提交真实节点数据、密码、令牌、私钥、数据库或本地环境文件。生产构建与演示数据保持隔离。

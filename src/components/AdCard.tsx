@@ -114,6 +114,12 @@ export function AdCard({
       ? node.expires_in
       : daysUntil(node.expires_at);
   const used = usage(node);
+  const remaining =
+    node.traffic_limit > 0 ? Math.max(0, node.traffic_limit - used) : null;
+  const remainingPercent =
+    node.traffic_limit > 0
+      ? Math.max(0, 100 - percent(used, node.traffic_limit))
+      : null;
   const down = sinceSeen(node);
   const neverSeen =
     node.last_seen_ago === null ||
@@ -215,26 +221,47 @@ export function AdCard({
           icon={<HardDrive size={13} />}
         />
       </div>
-      <div className="traffic-row">
-        <span>
-          本期流量 <b>{bytes(used)}</b>
-          {node.traffic_limit > 0
-            ? ` / ${bytes(node.traffic_limit)}`
-            : " / 不限量"}
-        </span>
-        {node.traffic_limit > 0 && (
-          <span>{percent(used, node.traffic_limit).toFixed(1)}%</span>
-        )}
-      </div>
-      <div className="speed-row">
-        <span>
-          <ArrowDown size={14} />
-          <strong>{m ? rate(m.net_rx) : "—"}</strong>
-        </span>
-        <span>
-          <ArrowUp size={14} />
-          <strong>{m ? rate(m.net_tx) : "—"}</strong>
-        </span>
+      <div className="network-deals">
+        <div className={`traffic-row ${remaining === 0 ? "is-exhausted" : ""}`}>
+          <div className="traffic-copy">
+            <small>本期剩余流量</small>
+            <strong>{remaining === null ? "不限量" : bytes(remaining)}</strong>
+            <span>
+              已用 {bytes(used)}
+              {node.traffic_limit > 0 ? ` / ${bytes(node.traffic_limit)}` : ""}
+            </span>
+          </div>
+          <div className="traffic-stamp">
+            <b>
+              {remainingPercent === null
+                ? "∞"
+                : `${remainingPercent.toFixed(0)}%`}
+            </b>
+            <span>
+              {remaining === 0
+                ? "额度用尽"
+                : remaining === null
+                  ? "不限额度"
+                  : "余量在手"}
+            </span>
+          </div>
+        </div>
+        <div className="speed-row">
+          <span className="speed-ticket speed-download">
+            <small>
+              <ArrowDown size={13} />
+              下载实况
+            </small>
+            <strong>{m ? rate(m.net_rx) : "—"}</strong>
+          </span>
+          <span className="speed-ticket speed-upload">
+            <small>
+              <ArrowUp size={13} />
+              上传实况
+            </small>
+            <strong>{m ? rate(m.net_tx) : "—"}</strong>
+          </span>
+        </div>
       </div>
       <div className="card-foot">
         <small>

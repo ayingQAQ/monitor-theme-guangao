@@ -41,7 +41,7 @@ export function demoPlugin(): Plugin {
           };
         else if (path === "/api/nodes")
           data = { admin: false, nodes: demoNodes };
-        else if (path === "/api/themes/guangao-theme/config") data = {};
+        else if (path === "/api/themes/monitor-theme-guangao/config") data = {};
         else if (/^\/api\/nodes\/\d+\/metrics$/.test(path))
           data = demoHistory();
         else {

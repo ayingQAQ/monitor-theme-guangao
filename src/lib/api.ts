@@ -178,6 +178,7 @@ export function sample(nodes: Node[]) {
 
 /** A malformed report must not remove every other node from the page. */
 export function safeNodes(nodes: Node[]): Node[] {
+  if (!Array.isArray(nodes)) throw new ApiError(200, "收到的不是状态数据，稍后再试")
   const number = (v: unknown) => typeof v === "number" && Number.isFinite(v) && v >= 0
   const fields = ["uptime", "cpu", "mem_total", "mem_used", "swap_total", "swap_used", "disk_total", "disk_used",
     "net_rx", "net_tx", "total_rx", "total_tx", "month_rx", "month_tx", "tcp", "udp", "procs"] as const
@@ -225,8 +226,11 @@ export function useNodes() {
     // are dropped on the first arrival rather than at once, which would read as
     // 0 B/s beside figures that are merely stale.
     let gap = false
+    // A slow REST response must not replace a snapshot received since it began.
+    let revision = 0
     const receive = (list: Node[]) => {
       const safe = safeNodes(list)
+      revision++
       if (gap) speedHistory.clear()
       gap = false
       sample(safe)
@@ -240,9 +244,10 @@ export function useNodes() {
     let epoch = 0
     const fetchOnce = () => {
       const started = epoch
+      const startedRevision = revision
       return api<{ nodes: Node[] }>("/nodes")
         .then((d) => {
-          if (started === epoch) receive(d.nodes)
+          if (started === epoch && startedRevision === revision) receive(d.nodes)
         })
         .catch((e: Error) => {
           if (started !== epoch) return
@@ -294,8 +299,8 @@ export function useNodes() {
           .then(async () => {
             const nodes = JSON.parse(await frameText(event.data)).nodes
             if (opened.readyState !== WebSocket.OPEN) return
-            watch()
             receive(nodes)
+            watch()
             // The stream has returned; the poll was only covering for it.
             if (poll) {
               clearInterval(poll)
