@@ -26,6 +26,7 @@ import {
   uptime,
 } from "@/lib/format";
 import { Country } from "./NodeCard";
+import { nodeRemark } from "@/lib/node-remarks";
 
 function usage(node: Node) {
   if (typeof node.month_used === "number" && Number.isFinite(node.month_used))
@@ -174,9 +175,7 @@ export function MonitorCard({
       </div>
       <p className="card-remark">
         {node.public_remark ||
-          (node.online
-            ? "资源全公开，指标看得见"
-            : "实时状态暂停，累计流量仍可查看")}
+          nodeRemark(node.id, !node.online ? "offline" : m ? "live" : "pending")}
       </p>
       <div className="offer-row">
         <div className={`offer-price ${isFree ? "is-free" : ""}`}>
