@@ -1,3 +1,4 @@
+import { observeMotion } from "@/lib/motion-visibility";
 import {
   ArrowUpRight,
   ArrowDown,
@@ -139,6 +140,7 @@ export function MonitorCard({
 
   return (
     <article
+      ref={observeMotion}
       className={`node-card tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
       aria-label={node.name}
     >

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useState } from "react"
 
 export type Metrics = {
   uptime: number
@@ -234,7 +234,8 @@ export function useNodes() {
       if (gap) speedHistory.clear()
       gap = false
       sample(safe)
-      setNodes(safe)
+      // Live snapshots must yield to taps and navigation on slower devices.
+      startTransition(() => setNodes(safe))
       setError(null)
       setClosed(false)
     }

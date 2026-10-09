@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useMemo, useState } from "react"
 import {
   Area, AreaChart, Brush, CartesianGrid, ComposedChart, Line, ResponsiveContainer,
   Tooltip, XAxis, YAxis, type DotItemDotProps,
@@ -170,6 +170,66 @@ function Fact({ label, value }: { label: string; value?: string | number | null 
  * lost -- which over a month shows a route's evening pattern a day cannot.
  */
 export function NodeDetail({ node, historyDays }: { node: Node; historyDays: number }) {
+  const m = node.metrics
+  return (
+    <div className="space-y-4">
+      {/* Wraps below the name on a phone, where the badges beside it would
+          leave a 320px screen two characters of it. */}
+      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <div className="flex min-w-0 items-center gap-2">
+          <Country node={node} />
+          <h2 className="truncate text-lg font-medium" title={node.name}>{node.name}</h2>
+        </div>
+        <Status node={node} />
+        {node.agent_version && (
+          <Badge className="font-normal">
+            agent {node.agent_version}
+          </Badge>
+        )}
+      </div>
+
+      {/* One flat grid of facts: one machine's spec sheet, where a box around
+          a single topic would be just a box. Three across at lg, two at md, one
+          on a phone -- a kernel version or a CPU model needs about 270px to
+          stay whole. */}
+      <dl className="grid gap-x-6 gap-y-3 md:grid-cols-2 lg:grid-cols-3">
+        <Fact label="系统" value={[osName(node.os), node.kernel].filter(Boolean).join(" · ")} />
+        <Fact
+          label="CPU"
+          value={node.cpu_name ? `${cpuName(node.cpu_name)} × ${node.cpu_cores}` : `${node.cpu_cores} 核`}
+        />
+        <Fact label="内存 / 硬盘" value={`${bytes(node.mem_total)} / ${bytes(node.disk_total)}`} />
+        <Fact
+          label="架构"
+          value={[node.arch, node.virt !== "none" ? node.virt : "", m ? `${m.procs} 进程` : ""]
+            .filter(Boolean)
+            .join(" · ")}
+        />
+        <Fact label="今日流量" value={`↓ ${bytes(node.day_rx)} · ↑ ${bytes(node.day_tx)}`} />
+        <Fact
+          label="续费"
+          value={[
+            node.price > 0
+              ? `${money(node.price, node.currency)} / ${cycle(node.billing_cycle)}`
+              : "免费",
+            node.expires_at ? `${node.expires_at} 到期` : FOREVER,
+          ].join(" · ")}
+        />
+      </dl>
+
+      {node.remark && (
+        <p className="rounded-md bg-muted px-3 py-2 text-sm whitespace-pre-wrap">{node.remark}</p>
+      )}
+
+      <NodeHistory nodeId={node.id} memTotal={node.mem_total} diskTotal={node.disk_total} historyDays={historyDays} />
+    </div>
+  )
+}
+
+// History changes with its requested series, not with each live snapshot.
+const NodeHistory = memo(function NodeHistory({ nodeId, memTotal, diskTotal, historyDays }: {
+  nodeId: number; memTotal: number; diskTotal: number; historyDays: number;
+}) {
   const ranges = useMemo(() => windows(historyDays), [historyDays])
   const [tab, setTab] = useState<(typeof TABS)[number]["key"]>("resources")
   // Each tab keeps its own range: a 7-day trend and a 1-hour trace answer
@@ -215,16 +275,15 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
     const points = Math.round(globalThis.innerWidth * (globalThis.devicePixelRatio || 1))
     const series = tab === "latency" ? "ping" : "metrics"
     api<{ metrics: Point[]; ping: PingPoint[]; probes: Probes; loss?: Loss }>(
-      `/nodes/${node.id}/metrics?hours=${hours}&points=${points}&series=${series}`,
+      `/nodes/${nodeId}/metrics?hours=${hours}&points=${points}&series=${series}`,
     )
       .then((next) => { if (active) setData(next) })
       .catch((e: Error) => {
         if (active) { setFailed(e.message); setData({ metrics: [], ping: [], probes: {} }) }
       })
     return () => { active = false }
-  }, [node.id, hours, tab, attempt])
+  }, [nodeId, hours, tab, attempt])
 
-  const m = node.metrics
   // One series per probe that reported, labelled from the names the samples
   // arrived with. Memoised, as are the two below: the node prop changes every few
   // seconds as live metrics arrive, and rebuilding the chart's data array on those
@@ -376,54 +435,6 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
 
   return (
     <div className="space-y-4">
-      {/* Wraps below the name on a phone, where the badges beside it would
-          leave a 320px screen two characters of it. */}
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-        <div className="flex min-w-0 items-center gap-2">
-          <Country node={node} />
-          <h2 className="truncate text-lg font-medium" title={node.name}>{node.name}</h2>
-        </div>
-        <Status node={node} />
-        {node.agent_version && (
-          <Badge className="font-normal">
-            agent {node.agent_version}
-          </Badge>
-        )}
-      </div>
-
-      {/* One flat grid of facts: one machine's spec sheet, where a box around
-          a single topic would be just a box. Three across at lg, two at md, one
-          on a phone -- a kernel version or a CPU model needs about 270px to
-          stay whole. */}
-      <dl className="grid gap-x-6 gap-y-3 md:grid-cols-2 lg:grid-cols-3">
-        <Fact label="系统" value={[osName(node.os), node.kernel].filter(Boolean).join(" · ")} />
-        <Fact
-          label="CPU"
-          value={node.cpu_name ? `${cpuName(node.cpu_name)} × ${node.cpu_cores}` : `${node.cpu_cores} 核`}
-        />
-        <Fact label="内存 / 硬盘" value={`${bytes(node.mem_total)} / ${bytes(node.disk_total)}`} />
-        <Fact
-          label="架构"
-          value={[node.arch, node.virt !== "none" ? node.virt : "", m ? `${m.procs} 进程` : ""]
-            .filter(Boolean)
-            .join(" · ")}
-        />
-        <Fact label="今日流量" value={`↓ ${bytes(node.day_rx)} · ↑ ${bytes(node.day_tx)}`} />
-        <Fact
-          label="续费"
-          value={[
-            node.price > 0
-              ? `${money(node.price, node.currency)} / ${cycle(node.billing_cycle)}`
-              : "免费",
-            node.expires_at ? `${node.expires_at} 到期` : FOREVER,
-          ].join(" · ")}
-        />
-      </dl>
-
-      {node.remark && (
-        <p className="rounded-md bg-muted px-3 py-2 text-sm whitespace-pre-wrap">{node.remark}</p>
-      )}
-
       <div className="space-y-2 border-t pt-4">
         <div className="flex gap-1">
           {TABS.map((t) => (
@@ -641,12 +652,12 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
               own maximum, which is what an area chart does by default, puts
               127 MB of a 457 MB box at the top of the panel. The size is in the
               title because the axis top is claiming it. */}
-          <Panel title={`内存 · ${bytes(node.mem_total)}`}>
+          <Panel title={`内存 · ${bytes(memTotal)}`}>
             <ResponsiveContainer>
               <AreaChart data={chartRows}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
                 <XAxis {...timeAxis(chartRows)} />
-                <YAxis domain={[0, node.mem_total]} ticks={quarters(node.mem_total)} tickFormatter={axisBytes} {...VALUE_AXIS} />
+                <YAxis domain={[0, memTotal]} ticks={quarters(memTotal)} tickFormatter={axisBytes} {...VALUE_AXIS} />
                 <Tooltip {...TOOLTIP} formatter={(v) => bytes(Number(v))} />
                 <Area dataKey="mem_used" name="内存" stroke="var(--color-chart-2)" fill="var(--color-chart-2)" fillOpacity={0.15} {...RESOURCE_SERIES} />
               </AreaChart>
@@ -719,12 +730,12 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
           {/* The disk it is filling, for the same reason as memory: a node
               using 2.7% of its disk draws along the top of the panel when the
               axis tracks the window's own maximum. */}
-          <Panel title={`硬盘 · ${bytes(node.disk_total)}`}>
+          <Panel title={`硬盘 · ${bytes(diskTotal)}`}>
             <ResponsiveContainer>
               <AreaChart data={chartRows}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
                 <XAxis {...timeAxis(chartRows)} />
-                <YAxis domain={[0, node.disk_total]} ticks={quarters(node.disk_total)} tickFormatter={axisBytes} {...VALUE_AXIS} />
+                <YAxis domain={[0, diskTotal]} ticks={quarters(diskTotal)} tickFormatter={axisBytes} {...VALUE_AXIS} />
                 <Tooltip {...TOOLTIP} formatter={(v) => bytes(Number(v))} />
                 <Area dataKey="disk_used" name="硬盘" stroke="var(--color-chart-2)" fill="var(--color-chart-2)" fillOpacity={0.15} {...RESOURCE_SERIES} />
               </AreaChart>
@@ -734,4 +745,4 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
       )}
     </div>
   )
-}
+})

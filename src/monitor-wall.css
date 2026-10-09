@@ -637,43 +637,19 @@ select:focus-visible {
   content: "";
   position: absolute;
   inset: -3px;
-  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
-  padding: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--tone) 0%,
-    var(--tone) 25%,
-    transparent 25%,
-    transparent 50%,
-    var(--tone) 50%,
-    var(--tone) 75%,
-    transparent 75%,
-    transparent 100%
-  );
-  background-size: 16px 100%;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  border: 2px dashed var(--tone);
+  border-radius: inherit;
   pointer-events: none;
   opacity: 0.4;
-  animation: border-march 20s linear infinite;
 }
-@keyframes border-march {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 16px 0;
-  }
-}
+@media (hover: hover) and (pointer: fine) {
 .node-card:hover {
   transform: translateY(-3px) rotate(0deg) !important;
   box-shadow:
     3px 4px 0 rgba(32, 24, 9, 0.2),
     6px 8px 0 rgba(32, 24, 9, 0.1);
   z-index: 10;
+}
 }
 /* 随机装饰贴纸 */
 .node-card::after {
@@ -786,7 +762,7 @@ select:focus-visible {
 .monitor-app[data-motion="on"][data-borderlight="on"]
   .node-border-light {
   opacity: 0.6;
-  animation: border-run 4s linear infinite;
+  animation: border-run 4s steps(64) infinite;
 }
 .tone-1 {
   --tone: #174ade;
@@ -1154,7 +1130,6 @@ select:focus-visible {
     transparent calc(var(--value) * 1%)
   );
   mask-image: radial-gradient(circle, #000 25%, #0009 45%, transparent 70%);
-  filter: blur(1px);
   opacity: 0.28;
   z-index: 1;
 }
@@ -1983,13 +1958,8 @@ select:focus-visible {
   }
 }
 @keyframes pulse-glow {
-  0%,
-  100% {
-    filter: drop-shadow(0 0 2px var(--tone)) drop-shadow(0 0 4px var(--tone));
-  }
-  50% {
-    filter: drop-shadow(0 0 6px var(--tone)) drop-shadow(0 0 12px var(--tone));
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
 }
 [data-motion="off"] *,
 [data-motion="off"] *:before,
@@ -2302,4 +2272,14 @@ select:focus-visible {
   .empty-state strong {
     font-size: 21px;
   }
+}
+
+/* Keep geometry and overflow intact: only decorative animation work is paused. */
+[data-motion-visible="false"],
+[data-motion-visible="false"] *,
+[data-motion-visible="false"]::before,
+[data-motion-visible="false"]::after,
+[data-motion-visible="false"] *::before,
+[data-motion-visible="false"] *::after {
+  animation-play-state: paused !important;
 }

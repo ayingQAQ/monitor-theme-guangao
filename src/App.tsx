@@ -1,3 +1,4 @@
+import { observeMotion } from "@/lib/motion-visibility";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import {
   ArrowLeft,
@@ -274,7 +275,7 @@ export default function App() {
               </nav>
             )}
             {config?.show_summary !== false && (
-              <section className="overview-panel" aria-label="节点汇总">
+              <section ref={observeMotion} className="overview-panel" aria-label="节点汇总">
                 <div className="hero-copy">
                   <span className="eyebrow">
                     <Zap size={15} fill="currentColor" /> 服务器实时展销中心
@@ -323,7 +324,7 @@ export default function App() {
                 </span>
               </section>
             )}
-            <div className="ticker" aria-label="专区实时汇总">
+            <div ref={observeMotion} className="ticker" aria-label="专区实时汇总">
               <span className="ticker-label">实时快报</span>
               <div className="ticker-window">
                 <div className="ticker-track">
@@ -376,7 +377,7 @@ export default function App() {
                 ))}
               </div>
             )}
-            <section className="bottom-banner">
+            <section ref={observeMotion} className="bottom-banner">
               <span className="bottom-star">✦</span>
               <div>
                 <strong>广告做得够大，数据看得够清。</strong>
