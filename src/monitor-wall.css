@@ -1,4 +1,11 @@
 /* Advertisement typography, print-like borders, loud colour; real metrics. */
+@font-face {
+  font-family: "Guangao Note";
+  src: url("/fonts/monitor-note.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
 body {
   margin: 0;
   background: #fff8dd;
@@ -945,6 +952,8 @@ select:focus-visible {
   animation: rotate-spark 4s ease-in-out infinite;
 }
 .card-remark {
+  font-family: "Guangao Note", "KaiTi", "STKaiti", cursive;
+  font-weight: 400;
   padding: 0 0 8px 0;
   font-size: 10px;
   color: var(--muted-foreground);
