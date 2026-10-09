@@ -615,25 +615,7 @@ select:focus-visible {
   gap: 20px;
   align-items: start;
 }
-/* 纸质风格：微小倾斜，像纸片堆叠 */
-.node-grid .node-card:nth-child(6n + 1) {
-  transform: rotate(-0.5deg);
-}
-.node-grid .node-card:nth-child(6n + 2) {
-  transform: rotate(0.3deg);
-}
-.node-grid .node-card:nth-child(6n + 3) {
-  transform: rotate(-0.3deg);
-}
-.node-grid .node-card:nth-child(6n + 4) {
-  transform: rotate(0.6deg);
-}
-.node-grid .node-card:nth-child(6n + 5) {
-  transform: rotate(-0.4deg);
-}
-.node-grid .node-card:nth-child(6n + 6) {
-  transform: rotate(0.2deg);
-}
+/* Keep the text upright; irregular paper edges and tilted stickers carry the handmade style. */
 .node-card {
   --tone: #ed362c;
   --tone-ink: #fff8e4;
@@ -661,7 +643,7 @@ select:focus-visible {
 }
 @media (hover: hover) and (pointer: fine) {
 .node-card:hover {
-  transform: translateY(-3px) rotate(0deg) !important;
+  transform: translateY(-3px);
   box-shadow:
     3px 4px 0 rgba(32, 24, 9, 0.2),
     6px 8px 0 rgba(32, 24, 9, 0.1);
