@@ -18,3 +18,5 @@ agent.env
 theme.tar.gz
 .DS_Store
 Thumbs.db
+test-results/
+playwright-report/

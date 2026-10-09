@@ -1,0 +1,53 @@
+{
+  "name": "广告墙 · Guangao",
+  "short": "guangao-theme",
+  "description": "满屏都是广告，点开全是探针。三种高饱和广告墙样式。",
+  "version": "0.1.0",
+  "author": "ayingQAQ",
+  "url": "https://github.com/ayingQAQ/guangao-theme",
+  "config": [
+    {
+      "key": "variant",
+      "type": "select",
+      "label": "广告墙风格",
+      "default": "promo",
+      "options": [
+        { "value": "promo", "label": "红黄促销墙" },
+        { "value": "neon", "label": "紫绿广告墙" },
+        { "value": "retro", "label": "复古 GIF 广告墙" }
+      ]
+    },
+    {
+      "key": "headline",
+      "type": "string",
+      "label": "横幅大标题",
+      "default": "好节点，不用找！"
+    },
+    {
+      "key": "notice",
+      "type": "text",
+      "label": "顶部公告",
+      "default": "",
+      "help": "纯文本，留空隐藏"
+    },
+    {
+      "key": "motion",
+      "type": "boolean",
+      "label": "广告动效",
+      "default": true,
+      "help": "始终遵循访客系统的减少动态效果设置"
+    },
+    {
+      "key": "show_summary",
+      "type": "boolean",
+      "label": "显示汇总横幅",
+      "default": true
+    },
+    {
+      "key": "show_float",
+      "type": "boolean",
+      "label": "显示网速浮窗",
+      "default": true
+    }
+  ]
+}
