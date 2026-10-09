@@ -8,6 +8,7 @@ for (const variant of ['promo', 'neon', 'retro']) test(`${variant} latency color
   await page.getByRole('button', { name: '网络延迟', exact: true }).click();
   const lines = page.locator('.recharts-line-curve');
   await expect(lines).toHaveCount(2);
+  expect(await lines.evaluateAll(els => els.map(el => getComputedStyle(el).strokeDasharray))).toEqual(['none', 'none']);
   const colors = await lines.evaluateAll(els => els.map(el => getComputedStyle(el).stroke));
   expect(new Set(colors).size).toBe(2);
   for (const color of colors) {
@@ -16,6 +17,7 @@ for (const variant of ['promo', 'neon', 'retro']) test(`${variant} latency color
   }
   const legends = page.getByRole('button').filter({ hasText: /香港线路|东京线路/ });
   await expect(legends).toHaveCount(2);
+  expect(await legends.locator('line').evaluateAll(els => els.map(el => getComputedStyle(el).strokeDasharray))).toEqual(['none', 'none']);
   expect(await legends.locator('line').evaluateAll(els => els.map(el => getComputedStyle(el).stroke))).toEqual(colors);
   await legends.first().click();
   await expect(lines).toHaveCount(1);

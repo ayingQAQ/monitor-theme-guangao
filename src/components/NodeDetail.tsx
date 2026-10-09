@@ -84,13 +84,13 @@ const TOOLTIP = {
 const VALUE_AXIS = { ...AXIS, width: 68, interval: 0 }
 
 // Dedicated latency colours keep probes distinct without changing resource charts.
-// Dash patterns provide a second cue, and hiding a probe keeps its assigned colour.
+// Hiding a probe keeps its assigned colour; every latency series is a solid line.
 const PALETTE = [
-  { stroke: "var(--latency-1)", dash: undefined },
-  { stroke: "var(--latency-2)", dash: "6 3" },
-  { stroke: "var(--latency-3)", dash: "2 3" },
-  { stroke: "var(--latency-4)", dash: "10 4 2 4" },
-  { stroke: "var(--latency-5)", dash: "1 4" },
+  { stroke: "var(--latency-1)" },
+  { stroke: "var(--latency-2)" },
+  { stroke: "var(--latency-3)" },
+  { stroke: "var(--latency-4)" },
+  { stroke: "var(--latency-5)" },
 ]
 const TABS = [
   { key: "resources", label: "资源" },
@@ -562,7 +562,6 @@ const NodeHistory = memo(function NodeHistory({ nodeId, memTotal, diskTotal, his
                         dataKey={`${smooth ? "s" : "t"}${s.id}`}
                         name={s.name}
                         stroke={style(s.id).stroke}
-                        strokeDasharray={style(s.id).dash}
                         {...SERIES}
                         connectNulls
                       />
@@ -609,7 +608,6 @@ const NodeHistory = memo(function NodeHistory({ nodeId, memTotal, diskTotal, his
                           x2="14"
                           y2="3"
                           stroke={style(s.id).stroke}
-                          strokeDasharray={style(s.id).dash}
                           strokeWidth="2"
                         />
                       </svg>

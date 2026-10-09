@@ -2397,3 +2397,11 @@ select:focus-visible {
 .card-foot .uptime-stamp.is-pending { color: var(--muted-foreground); border-color: var(--border); background: var(--muted); }
 .card-foot .uptime-stamp.is-pending { border-style: dotted; }
 .monitor-app[data-variant="promo"] .tone-3 .uptime-stamp.is-online { color: #92500a; }
+
+/* Dark ink for yellow-on-yellow readings; retain the yellow print and light effects. */
+.monitor-app[data-variant="promo"] .tone-3 .resource-tile:not(.is-high):not(.is-critical) strong,
+.monitor-app[data-variant="promo"] .tone-3 .resource-tile:not(.is-high):not(.is-critical) .resource-mega-number,
+.monitor-app[data-variant="promo"] .tone-3 .traffic-row:not(.is-exhausted) .traffic-copy > strong,
+.monitor-app[data-variant="promo"] .tone-3 .speed-row strong {
+  color: #92500a;
+}
