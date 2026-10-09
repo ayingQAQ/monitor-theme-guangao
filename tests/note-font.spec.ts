@@ -5,6 +5,7 @@ for (const variant of ['promo', 'neon', 'retro']) test(`${variant} notes load a 
   await page.goto('/');
   const note = page.locator('.card-remark').first();
   await expect(note).toBeVisible();
+  await expect(note).toHaveCSS('font-size', '15px');
   await expect(note).toHaveCSS('font-family', '"Guangao Note", KaiTi, STKaiti, cursive');
   expect(await page.evaluate(async () => {
     const loaded = await document.fonts.load('12px "Guangao Note"', 'CPU 有多忙，一眼就知道');
@@ -13,6 +14,6 @@ for (const variant of ['promo', 'neon', 'retro']) test(`${variant} notes load a 
   expect(await page.locator('.card-title h3').first().evaluate(el => getComputedStyle(el).fontFamily)).not.toContain('Guangao Note');
   expect(await page.locator('.resource-mega-number').first().evaluate(el => getComputedStyle(el).fontFamily)).not.toContain('Guangao Note');
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(note).toHaveCSS('font-size', '11px');
+  await expect(note).toHaveCSS('font-size', '15px');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
