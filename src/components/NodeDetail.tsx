@@ -5,7 +5,6 @@ import {
 } from "recharts"
 
 import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Country, Status } from "@/components/NodeCard"
 import { api, type Node } from "@/lib/api"
 import {
@@ -472,7 +471,11 @@ const NodeHistory = memo(function NodeHistory({ nodeId, memTotal, diskTotal, his
       </div>
 
       {!data ? (
-        <Skeleton className="h-40 w-full" />
+        <div className="history-loading" role="status" aria-live="polite">
+          <span className="history-loading-label">历史档案 · 正在调取</span>
+          <p>正在加载历史数据…</p>
+          <div className="history-loading-lines" aria-hidden="true"><i /><i /><i /></div>
+        </div>
       ) : failed ? (
         <p className="py-8 text-center text-sm text-destructive" role="alert">
           读取历史数据失败：{failed}
