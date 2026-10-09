@@ -7,7 +7,7 @@
 
 ## 截图
 
-以下截图全部来自明确标记的开发演示数据，不包含真实服务器信息。桌面三列卡片保持等比例缩放，手机使用单列布局。
+以下截图全部来自明确标记的开发演示数据，不包含真实服务器信息。桌面三列卡片保持等比例缩放。
 
 ### 红黄促销墙
 
@@ -20,10 +20,6 @@
 ### 复古 GIF 广告墙
 
 ![复古 GIF 广告墙](docs/previews/retro.png)
-
-### 手机预览
-
-<img src="docs/previews/mobile.png" alt="手机预览" width="390" />
 
 ## 功能
 
@@ -45,70 +41,6 @@ https://github.com/ayingQAQ/monitor-theme-guangao
 ```
 
 也可以从 [最新正式 Release](https://github.com/ayingQAQ/monitor-theme-guangao/releases/latest) 下载 `theme.tar.gz`，在后台上传并选择「广告墙 · Guangao」。请下载主题包，而不是 GitHub 自动生成的 Source code 压缩包。
-
-主题短名为 `monitor-theme-guangao`。压缩包根目录直接包含以下文件，不能再套一层主题目录；Hub 安装成功后自动创建同名目录：
-
-```text
-theme.tar.gz（解压根目录）
-├── theme.json
-├── preview.png
-├── LICENSE
-├── THIRD_PARTY.md
-├── THIRD_PARTY_NOTICES.txt
-└── dist/
-    └── index.html
-```
-
-后台主题设置支持皮肤、横幅标题、纯文本公告、汇总、浮窗和动效。后台及登录页由 Hub 提供。
-
-从旧短名 `guangao-theme` 升级时，新主题会作为独立条目安装，需要重新选择并保存站点主题设置。
-
-## 本地开发
-
-需要 Node.js 24.11+。
-
-```sh
-npm ci
-npm run dev:demo
-```
-
-打开 `http://127.0.0.1:5173`。页面会标明「演示数据 · 非真实节点」。
-
-使用真实公开 Hub 时，设置 `MONITOR_HUB` 后运行 `npm run dev`：
-
-```sh
-# Linux / macOS
-MONITOR_HUB=https://your-monitor.example.com npm run dev
-```
-
-```powershell
-# PowerShell
-$env:MONITOR_HUB = 'https://your-monitor.example.com'
-npm run dev
-```
-
-开发服务器只监听本机，代理同源 `/api` 请求和 WebSocket；没有设置变量时，默认连接 `http://127.0.0.1:9911`。
-
-## 验证与打包
-
-```sh
-npm test
-npm run lint
-npm run build
-npx playwright install chromium
-npm run test:e2e
-npm run package
-```
-
-`npm run package` 生成 `theme.tar.gz`，校验清单、目录名、文件类型、体积限制和 gzip 完整性。发布时使用与 `theme.json.version` 对应的正式 tag，Release 附件名保持 `theme.tar.gz`。
-
-截图更新：先运行演示服务器，再执行 `node scripts/capture.mjs`。脚本仅接受标记为演示数据的页面。
-
-[广告过滤兼容性检查](docs/blocker-compatibility.md) 记录了误隐藏风险、命名调整和模拟测试范围。
-
-[接口检查记录](docs/protocol-audit.md) 列出了测试范围与实测限制。`node scripts/audit-hub.mjs` 可对 `MONITOR_HUB` 指定的公开 Hub 做只读协议检查。
-
-反向代理或 WAF 应放行 `/`、`/node/{id}`、`/favicon.svg` 和 `/apple-touch-icon.png`，以及 Monitor 自身的 API 和后台路径。
 
 ## 开发依据与许可
 
