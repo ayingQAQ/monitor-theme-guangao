@@ -491,6 +491,7 @@ select:focus-visible {
   text-transform: uppercase;
 }
 .ticker-window {
+  container-type: inline-size;
   min-width: 0;
   flex: 1;
   overflow: hidden;
@@ -499,13 +500,22 @@ select:focus-visible {
 }
 .ticker-track {
   display: flex;
+  width: max-content;
+  animation: ticker-drift 24s linear infinite;
+}
+.ticker-group {
+  display: flex;
   align-items: center;
+  flex-shrink: 0;
+  min-width: 100cqw;
   gap: 36px;
   white-space: nowrap;
-  animation: ticker-drift 24s linear infinite alternate;
   padding: 0 20px;
 }
 .ticker-track b {
+  display: inline-block;
+  min-width: 11ch;
+  font-variant-numeric: tabular-nums;
   color: var(--hot);
   margin-left: 5px;
   font-weight: 900;
@@ -737,7 +747,7 @@ select:focus-visible {
   z-index: 1;
 }
 /* 可通过设置关闭边框动画 */
-.ad-app[data-motion="on"]:not([data-border-animate="off"])
+.ad-app[data-motion="on"][data-borderlight="on"]
   .node-ad-border-animate {
   opacity: 0.6;
   animation: border-run 4s linear infinite;
@@ -1841,10 +1851,10 @@ select:focus-visible {
 }
 @keyframes ticker-drift {
   from {
-    transform: translateX(0);
+    transform: translateX(-50%);
   }
   to {
-    transform: translateX(-90px);
+    transform: translateX(0);
   }
 }
 @keyframes live-breathe {
@@ -2148,7 +2158,7 @@ select:focus-visible {
   .ticker-end {
     display: none;
   }
-  .ticker-track {
+  .ticker-group {
     gap: 22px;
   }
   .section-heading {

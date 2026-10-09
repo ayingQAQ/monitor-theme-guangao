@@ -2,6 +2,41 @@ import { test, expect } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 import { demoNodes } from "../dev/fixtures";
 
+test("ticker moves continuously to the right on desktop and mobile", async ({ page }) => {
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    await expect(page.getByRole("article")).toHaveCount(6);
+    const motion = await page.locator(".ticker-track").evaluate((track) => {
+      const animation = track.getAnimations()[0];
+      const timing = animation.effect!.getTiming();
+      animation.pause();
+      animation.currentTime = 0;
+      const start = track.getBoundingClientRect().left;
+      animation.currentTime = Number(timing.duration) / 4;
+      return { delta: track.getBoundingClientRect().left - start, direction: timing.direction };
+    });
+    expect(motion.direction).toBe("normal");
+    expect(motion.delta).toBeGreaterThan(100);
+    await expect(page.locator(".ticker-group[aria-hidden='true']")).toHaveCount(1);
+  }
+});
+
+test("border light switch controls every light layer and survives reload", async ({ page }) => {
+  await page.goto("/");
+  const light = page.locator(".node-ad-border-animate").first();
+  await expect(light).toHaveCSS("animation-name", "border-run");
+  await page.getByRole("button", { name: "关闭边框灯" }).click();
+  await expect(light).toHaveCSS("opacity", "0");
+  await expect(light).toHaveCSS("animation-name", "none");
+  expect(await page.getByRole("article").first().evaluate((card) => getComputedStyle(card, "::before").content)).toBe("none");
+  await page.reload();
+  await expect(light).toHaveCSS("opacity", "0");
+  await page.getByRole("button", { name: "开启边框灯" }).click();
+  await expect(light).toHaveCSS("animation-name", "border-run");
+  await expect(light).toHaveCSS("opacity", "0.6");
+});
+
 test("history requests follow hub retention and request only the selected series", async ({ page }) => {
   await page.route("**/api/me", (route) => route.fulfill({ json: {
     authed: false, site_name: "协议检查", public_page: true, history_days: 30,

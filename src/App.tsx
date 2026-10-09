@@ -327,16 +327,24 @@ export default function App() {
               <span className="ticker-label">实时快报</span>
               <div className="ticker-window">
                 <div className="ticker-track">
-                  <span>
-                    ↓ 已上报下载 <b>{download}</b>
-                  </span>
-                  <span>
-                    ↑ 已上报上传 <b>{upload}</b>
-                  </span>
-                  <span>
-                    累计流量 <b>{loading ? "—" : bytes(traffic)}</b>
-                  </span>
-                  <span>看着像广告？点开才知道！</span>
+                  {[false, true].map((copy) => (
+                    <div
+                      className="ticker-group"
+                      key={String(copy)}
+                      aria-hidden={copy || undefined}
+                    >
+                      <span>
+                        ↓ 已上报下载 <b>{download}</b>
+                      </span>
+                      <span>
+                        ↑ 已上报上传 <b>{upload}</b>
+                      </span>
+                      <span>
+                        累计流量 <b>{loading ? "—" : bytes(traffic)}</b>
+                      </span>
+                      <span>看着像广告？点开才知道！</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               <span className="ticker-end">LIVE ↗</span>
