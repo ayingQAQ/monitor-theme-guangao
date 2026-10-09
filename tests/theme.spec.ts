@@ -2,6 +2,23 @@ import { test, expect } from "@playwright/test";
 import { gzipSync } from "node:zlib";
 import { demoNodes } from "../dev/fixtures";
 
+test("network history starts with two clear mean lines and optional peak bands", async ({ page }) => {
+  await page.goto("/node/1");
+  const chart = page.getByRole("region", { name: "网络速率历史图" });
+  await expect(chart).toBeVisible();
+  await expect(chart.locator(".recharts-area")).toHaveCount(0);
+  await expect(chart.locator(".recharts-line")).toHaveCount(2);
+  await expect(chart.getByText("下行均值", { exact: true })).toBeVisible();
+  await expect(chart.getByText("上行均值", { exact: true })).toBeVisible();
+  const peaks = chart.getByRole("button", { name: "峰值区间", exact: true });
+  await expect(peaks).toHaveAttribute("aria-pressed", "false");
+  await peaks.click();
+  await expect(chart.locator(".recharts-area")).toHaveCount(2);
+  await expect(peaks).toHaveAttribute("aria-pressed", "true");
+  await peaks.click();
+  await expect(chart.locator(".recharts-area")).toHaveCount(0);
+});
+
 test("Canadian dollar cards display the complete CAD code on desktop and mobile", async ({ page }) => {
   await page.routeWebSocket("**/api/ws*", () => {});
   await page.route("**/api/nodes", (route) => route.fulfill({ json: {

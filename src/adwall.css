@@ -444,6 +444,42 @@ select:focus-visible {
   color: #ed332b;
   letter-spacing: 8px;
 }
+.network-chart-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+.network-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.network-chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.network-download { color: var(--chart-2); }
+.network-upload { color: var(--chart-1); }
+.network-chart-legend i {
+  width: 16px;
+  border-top: 2px solid currentColor;
+}
+.network-chart-controls button {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: transparent;
+}
+.network-chart-controls button[aria-pressed="true"] {
+  color: var(--ink);
+  background: var(--muted);
+}
 .ticker {
   display: flex;
   align-items: stretch;

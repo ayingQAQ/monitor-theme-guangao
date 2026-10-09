@@ -104,10 +104,11 @@ const TABS = [
   { key: "latency", label: "网络延迟" },
 ] as const
 
-function Panel({ title, children }: { title: string; children: React.ReactNode }) {
+function Panel({ title, controls, children }: { title: string; controls?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div>
       <h4 className="mb-2 text-xs font-medium text-muted-foreground">{title}</h4>
+      {controls}
       <div className="h-40 w-full text-muted-foreground">{children}</div>
     </div>
   )
@@ -176,6 +177,7 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
   const [picked, setPicked] = useState({ resources: 6, latency: 6 })
   const hours = picked[tab]
   const [smooth, setSmooth] = useState(false)
+  const [showRatePeaks, setShowRatePeaks] = useState(false)
   // Probes switched off. Hiding a slow one is what makes the fast ones readable,
   // as the axis rescales to what remains.
   const [hiddenProbes, setHiddenProbes] = useState<number[]>([])
@@ -291,10 +293,10 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
       // within the panel.
       rate: rateAxis(
         metricRows.reduce((lo, m) => Math.min(lo, m.rx, m.tx), Infinity),
-        max((m) => Math.max(m.rx_band[1], m.tx_band[1])),
+        max((m) => showRatePeaks ? Math.max(m.rx_band[1], m.tx_band[1]) : Math.max(m.rx, m.tx)),
       ),
     }
-  }, [metricRows])
+  }, [metricRows, showRatePeaks])
 
   const shownProbes = useMemo(
     () => pingSeries.filter((s) => !hiddenProbes.includes(s.id)),
@@ -661,50 +663,58 @@ export function NodeDetail({ node, historyDays }: { node: Node; historyDays: num
               The line is the bucket's mean, so it integrates to the traffic
               totals, and a 15-second speed test averaged over its minute draws
               at a quarter of the rate it ran at. The band behind it reaches the
-              highest rate measured within the bucket, and is edged because a
-              one-minute burst on a day's axis is narrower than a pixel, where
-              a fill alone does not show. The edge is dashed rather than faded:
-              the rates are told apart by shade, and a faded edge of one would
-              take the shade of the other's line. Its lower edge lies under the
-              line. */}
-          <Panel title={peak ? `网络速率 · 峰值 ↓ ${rate(peak.rx)} · ↑ ${rate(peak.tx)}` : "网络速率"}>
-            <ResponsiveContainer>
-              <ComposedChart data={chartRows}>
-                <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
-                <XAxis {...timeAxis(chartRows)} />
-                <YAxis scale="log" {...axes.rate} tickFormatter={axisBytes} unit="/s" {...VALUE_AXIS} />
-                <Tooltip
-                  {...TOOLTIP}
-                  // The hub's figures rather than `v`, which is lifted to the
-                  // axis floor.
-                  formatter={(_, name, item) => {
-                    const mean = item?.payload?.[`net_${item.dataKey}`]
-                    const top = item?.payload?.[`net_${item.dataKey}_max`]
-                    return [top === undefined ? rate(mean) : `均值 ${rate(mean)} · 峰值 ${rate(top)}`, name]
-                  }}
-                />
-                {[
-                  { key: "rx", stroke: "var(--color-ok)" },
-                  { key: "tx", stroke: "var(--color-chart-1)" },
-                ].map((s) => (
-                  <Area
-                    key={s.key}
-                    dataKey={`${s.key}_band`}
-                    stroke={s.stroke}
-                    strokeWidth={1}
-                    strokeDasharray="2 2"
-                    fill={s.stroke}
-                    fillOpacity={0.16}
-                    isAnimationActive={false}
-                    tooltipType="none"
-                    legendType="none"
+              highest rate measured within the bucket. It is optional so the
+              default chart reads as two mean lines, with exact peaks retained
+              in the title and tooltip. No smoothing changes the measurements. */}
+          <section aria-label="网络速率历史图">
+            <Panel
+              title={peak ? `网络速率 · 峰值 ↓ ${rate(peak.rx)} · ↑ ${rate(peak.tx)}` : "网络速率"}
+              controls={(
+                <div className="network-chart-controls">
+                  <div className="network-chart-legend">
+                    <span className="network-download"><i aria-hidden="true" />下行均值</span>
+                    <span className="network-upload"><i aria-hidden="true" />上行均值</span>
+                  </div>
+                  {peak && <button type="button" aria-pressed={showRatePeaks} onClick={() => setShowRatePeaks(!showRatePeaks)}>峰值区间</button>}
+                </div>
+              )}
+            >
+              <ResponsiveContainer>
+                <ComposedChart data={chartRows}>
+                  <CartesianGrid strokeDasharray="3 6" strokeOpacity={0.45} className="stroke-border" vertical={false} />
+                  <XAxis {...timeAxis(chartRows)} />
+                  <YAxis scale="log" {...axes.rate} tickFormatter={axisBytes} unit="/s" {...VALUE_AXIS} />
+                  <Tooltip
+                    {...TOOLTIP}
+                    // The hub's figures rather than `v`, which is lifted to the
+                    // axis floor.
+                    formatter={(_, name, item) => {
+                      const mean = item?.payload?.[`net_${item.dataKey}`]
+                      const top = item?.payload?.[`net_${item.dataKey}_max`]
+                      return [top === undefined ? rate(mean) : `均值 ${rate(mean)} · 峰值 ${rate(top)}`, name]
+                    }}
                   />
-                ))}
-                <Line dataKey="rx" name="下行" stroke="var(--color-ok)" {...RESOURCE_SERIES} />
-                <Line dataKey="tx" name="上行" stroke="var(--color-chart-1)" {...RESOURCE_SERIES} />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </Panel>
+                  {showRatePeaks && [
+                    { key: "rx", stroke: "var(--chart-2)" },
+                    { key: "tx", stroke: "var(--chart-1)" },
+                  ].map((s) => (
+                    <Area
+                      key={s.key}
+                      dataKey={`${s.key}_band`}
+                      stroke="none"
+                      fill={s.stroke}
+                      fillOpacity={0.07}
+                      isAnimationActive={false}
+                      tooltipType="none"
+                      legendType="none"
+                    />
+                  ))}
+                  <Line dataKey="rx" name="下行均值" stroke="var(--chart-2)" {...RESOURCE_SERIES} strokeWidth={2} />
+                  <Line dataKey="tx" name="上行均值" stroke="var(--chart-1)" {...RESOURCE_SERIES} strokeWidth={2} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </Panel>
+            </section>
 
           {/* The disk it is filling, for the same reason as memory: a node
               using 2.7% of its disk draws along the top of the panel when the
