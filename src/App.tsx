@@ -68,6 +68,9 @@ export default function App() {
   const [motionStopped, setMotionStopped] = useState(
     () => readPreference("guangao.motion") === "off",
   );
+  const [borderLightStopped, setBorderLightStopped] = useState(
+    () => readPreference("guangao.borderlight") === "off",
+  );
   const { nodes, error, closed } = useNodes();
   const [open, go] = useNodeRoute();
   const [group, setGroup] = useState<string | null>(null);
@@ -157,6 +160,7 @@ export default function App() {
       className="ad-app"
       data-variant={variant}
       data-motion={motion ? "on" : "off"}
+      data-borderlight={borderLightStopped ? "off" : "on"}
     >
       <a className="skip-link" href="#main">
         跳到节点信息
@@ -413,6 +417,16 @@ export default function App() {
             }}
           >
             {motionStopped ? "恢复动效" : "停止动效"}
+          </button>
+          <button
+            aria-pressed={borderLightStopped}
+            onClick={() => {
+              const next = !borderLightStopped;
+              setBorderLightStopped(next);
+              writePreference("guangao.borderlight", next ? "off" : "on");
+            }}
+          >
+            {borderLightStopped ? "开启边框灯" : "关闭边框灯"}
           </button>
           <small>仅影响当前浏览器</small>
         </div>

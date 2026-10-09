@@ -14,6 +14,7 @@ select:focus-visible {
   outline-offset: 4px;
 }
 .ad-app {
+  overflow-x: clip;
   --ink: #201809;
   --paper: #fff9e8;
   --wall: #fff5cf;
@@ -521,40 +522,140 @@ select:focus-visible {
 .ad-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 21px;
+  gap: 20px;
   align-items: start;
 }
-/* 打破规整：随机倾斜和大小变化 */
-.ad-grid .node-ad:nth-child(6n+1) {
-  transform: rotate(-1.5deg);
+/* 纸质风格：微小倾斜，像纸片堆叠 */
+.ad-grid .node-ad:nth-child(6n + 1) {
+  transform: rotate(-0.5deg);
 }
-.ad-grid .node-ad:nth-child(6n+2) {
-  transform: rotate(1deg) scale(1.03);
+.ad-grid .node-ad:nth-child(6n + 2) {
+  transform: rotate(0.3deg);
 }
-.ad-grid .node-ad:nth-child(6n+3) {
-  transform: rotate(-0.8deg);
+.ad-grid .node-ad:nth-child(6n + 3) {
+  transform: rotate(-0.3deg);
 }
-.ad-grid .node-ad:nth-child(6n+4) {
-  transform: rotate(1.8deg) scale(0.98);
+.ad-grid .node-ad:nth-child(6n + 4) {
+  transform: rotate(0.6deg);
 }
-.ad-grid .node-ad:nth-child(6n+5) {
-  transform: rotate(-1.2deg);
+.ad-grid .node-ad:nth-child(6n + 5) {
+  transform: rotate(-0.4deg);
 }
-.ad-grid .node-ad:nth-child(6n+6) {
-  transform: rotate(0.5deg) scale(1.02);
+.ad-grid .node-ad:nth-child(6n + 6) {
+  transform: rotate(0.2deg);
 }
 .node-ad {
   --tone: #ed362c;
   --tone-ink: #fff8e4;
   background: var(--paper);
   border: 2px solid var(--card-line);
-  box-shadow: 4px 4px 0 var(--card-line);
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  box-shadow:
+    2px 3px 0 rgba(32, 24, 9, 0.15),
+    4px 6px 0 rgba(32, 24, 9, 0.08);
   min-width: 0;
-  transition:
-    transform 0.16s ease,
-    box-shadow 0.16s ease;
+  transition: transform 0.2s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  padding: 16px;
+}
+/* 边框跑马灯效果 */
+.ad-app[data-borderlight="on"] .node-ad::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  padding: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--tone) 0%,
+    var(--tone) 25%,
+    transparent 25%,
+    transparent 50%,
+    var(--tone) 50%,
+    var(--tone) 75%,
+    transparent 75%,
+    transparent 100%
+  );
+  background-size: 16px 100%;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.4;
+  animation: border-march 20s linear infinite;
+}
+@keyframes border-march {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 16px 0;
+  }
+}
+.node-ad:hover {
+  transform: translateY(-3px) rotate(0deg) !important;
+  box-shadow:
+    3px 4px 0 rgba(32, 24, 9, 0.2),
+    6px 8px 0 rgba(32, 24, 9, 0.1);
+  z-index: 10;
+}
+/* 随机装饰贴纸 */
+.node-ad::after {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 5px 10px;
+  background: var(--sun);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
+  z-index: 12;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.node-ad.tone-0::after {
+  content: "限时";
+  top: -8px;
+  right: 20px;
+  transform: rotate(8deg);
+}
+.node-ad.tone-1::after {
+  content: "精选";
+  top: 15px;
+  right: -12px;
+  transform: rotate(-15deg);
+}
+.node-ad.tone-2::after {
+  content: "推荐";
+  top: -6px;
+  left: 15px;
+  transform: rotate(-5deg);
+}
+.node-ad.tone-3::after {
+  content: "NEW";
+  bottom: 60px;
+  right: -10px;
+  transform: rotate(12deg);
+}
+.node-ad.tone-4::after {
+  content: "特惠";
+  top: 10px;
+  left: -8px;
+  transform: rotate(6deg);
+}
+.node-ad.tone-5::after {
+  content: "火爆";
+  bottom: 80px;
+  left: -10px;
+  transform: rotate(-10deg);
+}
+.ad-app[data-motion="on"] .node-ad::after {
+  animation: shake-price 3s ease-in-out infinite;
 }
 .hot-badge {
   position: absolute;
@@ -583,10 +684,11 @@ select:focus-visible {
 .node-ad.is-hot .card-topline {
   padding-right: 84px;
 }
-.node-ad::before {
+.node-ad-border-animate {
   content: "";
   position: absolute;
   inset: 0;
+  border-radius: 12px;
   background:
     linear-gradient(90deg, var(--tone) 50%, transparent 50%),
     linear-gradient(180deg, var(--tone) 50%, transparent 50%),
@@ -607,14 +709,10 @@ select:focus-visible {
   pointer-events: none;
   z-index: 1;
 }
-.ad-app[data-motion="on"] .node-ad::before {
+/* 可通过设置关闭边框动画 */
+.ad-app[data-motion="on"]:not([data-border-animate="off"]) .node-ad-border-animate {
   opacity: 0.6;
   animation: border-run 4s linear infinite;
-}
-.node-ad:hover {
-  transform: translate(-2px, -2px) rotate(0deg) scale(1.05) !important;
-  box-shadow: 8px 8px 0 var(--card-line);
-  z-index: 10;
 }
 .tone-1 {
   --tone: #174ade;
@@ -716,7 +814,9 @@ select:focus-visible {
   background: var(--tone);
   color: var(--tone-ink);
   padding: 6px 12px;
-  border-bottom: 2px solid var(--card-line);
+  margin: -16px -16px 12px -16px;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+  border-bottom: 2px solid var(--ink);
   font-size: 10px;
   font-weight: 800;
   position: relative;
@@ -752,7 +852,7 @@ select:focus-visible {
   display: flex;
   gap: 7px;
   align-items: center;
-  padding: 19px 16px 6px;
+  padding: 0 0 6px 0;
   position: relative;
 }
 .node-id {
@@ -785,7 +885,7 @@ select:focus-visible {
   animation: rotate-spark 4s ease-in-out infinite;
 }
 .card-remark {
-  padding: 0 16px;
+  padding: 0 0 8px 0;
   font-size: 10px;
   color: var(--muted-foreground);
   min-height: 16px;
@@ -795,7 +895,7 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 17px 16px 14px;
+  padding: 12px 0;
   gap: 6px;
 }
 .offer-price {
@@ -857,37 +957,48 @@ select:focus-visible {
   gap: 4px 8px;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  padding: 7px 16px;
+  padding: 8px 0;
+  margin: 8px 0;
   font-size: 9px;
   font-weight: 700;
-  background: var(--muted);
-  position: relative;
-}
-.spec-ribbon::before {
-  content: "★";
-  position: absolute;
-  left: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--tone);
-  font-size: 10px;
-  opacity: 0.3;
-}
-.spec-ribbon::after {
-  content: "★";
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--tone);
-  font-size: 10px;
-  opacity: 0.3;
+  color: var(--muted-foreground);
 }
 .card-resources {
-  padding: 15px 16px 9px;
+  padding: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.ad-resource {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 6px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  position: relative;
+  min-height: 95px;
+  box-shadow: 0 1px 3px rgba(32, 24, 9, 0.06);
+}
+.ad-resource::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--tone);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+}
+.ad-resource.is-high::before {
+  opacity: 0.1;
+}
+.ad-resource.is-critical::before {
+  opacity: 0.2;
 }
 .ad-resource > div:first-child {
   display: flex;
@@ -895,6 +1006,8 @@ select:focus-visible {
   gap: 4px;
   font-size: 10px;
   position: relative;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
 }
 .ad-resource.is-high > div:first-child::after {
   content: "⚠";
@@ -912,25 +1025,6 @@ select:focus-visible {
   color: #ff3b30;
   animation: blink-tag 1s ease-in-out infinite;
 }
-.ad-resource.is-high .resource-track > span {
-  background: linear-gradient(
-    90deg,
-    #ff9500 0%,
-    #ffb800 50%,
-    #ff9500 100%
-  ) !important;
-  background-size: 200% 100% !important;
-}
-.ad-resource.is-critical .resource-track > span {
-  background: linear-gradient(
-    90deg,
-    #ff3b30 0%,
-    #ff6b30 50%,
-    #ff3b30 100%
-  ) !important;
-  background-size: 200% 100% !important;
-  box-shadow: 0 0 8px #ff3b30;
-}
 .ad-resource strong {
   margin-left: auto;
   font-size: 11px;
@@ -938,76 +1032,97 @@ select:focus-visible {
   color: var(--tone);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-.unavailable {
-  font-size: 9px;
-  font-weight: 500;
-  color: var(--muted-foreground);
-}
-.resource-track {
-  height: 8px;
-  margin-top: 5px;
-  background: var(--muted);
-  border: 2px solid var(--card-line);
-  overflow: hidden;
+/* 重新设计：巨大数字 + 圆形仪表盘背景 */
+.resource-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
   position: relative;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
-.resource-track > span {
-  height: 100%;
-  display: block;
-  background: linear-gradient(
-    90deg,
-    var(--tone) 0%,
-    color-mix(in srgb, var(--tone) 80%, white) 50%,
-    var(--tone) 100%
-  );
-  background-size: 200% 100%;
+.resource-mega-number {
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--tone);
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
   position: relative;
-  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 2;
 }
-.ad-app[data-motion="on"] .resource-track > span {
-  animation: progress-shine 2s ease-in-out infinite;
+.ad-resource.is-high .resource-mega-number {
+  color: #ff9500;
 }
-.ad-app[data-motion="on"] .resource-track > span::after {
-  content: "";
+.ad-resource.is-critical .resource-mega-number {
+  color: #ff3b30;
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.2),
+    0 0 10px currentColor;
+}
+.resource-percent-sign {
+  font-size: 16px;
+  vertical-align: super;
+  opacity: 0.7;
+}
+/* 圆形背景装饰 */
+.resource-circle-bg {
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.6) 50%,
-    transparent 100%
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid var(--border);
+  background: conic-gradient(
+    var(--tone) calc(var(--value) * 1%),
+    var(--muted) calc(var(--value) * 1%)
   );
-  animation: progress-flash 3s ease-in-out infinite;
+  opacity: 0.3;
+  z-index: 1;
+}
+.ad-resource.is-high .resource-circle-bg {
+  border-color: #ff9500;
+  background: conic-gradient(
+    #ff9500 calc(var(--value) * 1%),
+    var(--muted) calc(var(--value) * 1%)
+  );
+}
+.ad-resource.is-critical .resource-circle-bg {
+  border-color: #ff3b30;
+  background: conic-gradient(
+    #ff3b30 calc(var(--value) * 1%),
+    var(--muted) calc(var(--value) * 1%)
+  );
+}
+.ad-app[data-motion="on"] .resource-circle-bg {
+  animation: rotate-spark 6s linear infinite;
 }
 .ad-resource > small {
+  overflow-wrap: anywhere;
   display: block;
   font:
     8px "Courier New",
     "Microsoft YaHei",
     monospace;
-  margin-top: 3px;
+  margin-top: auto;
   color: var(--muted-foreground);
+  text-align: center;
+  line-height: 1.3;
+}
+.unavailable {
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--muted-foreground);
+  text-align: center;
 }
 .traffic-row {
-  padding: 7px 16px;
+  padding: 8px 12px;
   display: flex;
   gap: 6px;
   justify-content: space-between;
   font-size: 9px;
   color: var(--muted-foreground);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--muted) 20%,
-    var(--muted) 80%,
-    transparent 100%
-  );
-  border-left: 3px solid var(--tone);
-  border-right: 3px solid var(--tone);
+  background: var(--muted);
+  border-radius: 6px;
 }
 .traffic-row b {
   font-weight: 800;
@@ -1018,39 +1133,32 @@ select:focus-visible {
   display: flex;
   justify-content: space-between;
   gap: 7px;
-  padding: 11px 16px;
-  border-top: 1px dashed var(--border);
-  background: repeating-linear-gradient(
-    45deg,
-    transparent,
-    transparent 10px,
-    var(--muted) 10px,
-    var(--muted) 11px
-  );
+  padding: 8px 0;
 }
 .speed-row span {
   display: flex;
   gap: 5px;
   align-items: center;
   font-size: 11px;
-  padding: 4px 8px;
-  background: var(--paper);
-  border-radius: 2px;
+  padding: 6px 8px;
+  background: var(--muted);
+  border-radius: 6px;
   flex: 1;
   justify-content: center;
 }
 .speed-row strong {
-  font-weight: 900;
+  font-weight: 700;
   color: var(--tone);
-  font-size: 13px;
+  font-size: 12px;
 }
 .card-foot {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 7px;
-  padding: 11px 12px 11px 16px;
-  border-top: 1px solid var(--card-line);
+  padding: 12px 0 0 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
 }
 .card-foot small {
   font-size: 8px;
@@ -1060,37 +1168,24 @@ select:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 8px;
   color: var(--tone-ink);
   background: var(--tone);
-  border: 1px solid var(--card-line);
-  font-size: 12px;
-  font-weight: 900;
-  padding: 7px 12px;
-  box-shadow: 2px 2px 0 var(--card-line);
+  border: 2px solid var(--ink);
+  border-radius: 255px 25px 225px 25px/25px 225px 25px 255px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  box-shadow: 2px 3px 0 rgba(32, 24, 9, 0.2);
   white-space: nowrap;
   position: relative;
   overflow: hidden;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
+  transition: all 0.2s ease;
 }
-.card-foot a::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.6s,
-    height 0.6s;
-}
-.card-foot a:hover::before {
-  width: 300px;
-  height: 300px;
+.card-foot a:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 5px 0 rgba(32, 24, 9, 0.25);
 }
 .ad-resource > div:first-child {
   font-size: 11px;

@@ -56,29 +56,44 @@ function Resource({
       <div>
         {icon}
         <span>{label}</span>
-        <strong>
-          {value === null ? (
-            <span className="unavailable">{label} 不可用</span>
-          ) : (
-            `${value.toFixed(1)}%`
-          )}
-        </strong>
+        <strong>{value === null ? "" : `${value.toFixed(1)}%`}</strong>
       </div>
-      <div
-        className="resource-track"
-        role="meter"
-        aria-label={`${label}使用率`}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={value === null ? undefined : Math.min(100, value)}
-        aria-valuetext={value === null ? "不可用" : `${value.toFixed(1)}%`}
-      >
-        <span
-          style={{
-            width: `${value === null ? 0 : Math.min(100, Math.max(0, value))}%`,
-          }}
-        />
-      </div>
+      {value === null ? (
+        <div
+          className="resource-display"
+          role="meter"
+          aria-label={`${label}使用率`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuetext="不可用"
+        >
+          <span className="unavailable">{label} 不可用</span>
+        </div>
+      ) : (
+        <div
+          className="resource-display"
+          role="meter"
+          aria-label={`${label}使用率`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.min(100, Math.max(0, value))}
+          aria-valuetext={`${value.toFixed(1)}%`}
+        >
+          <div
+            className="resource-circle-bg"
+            aria-hidden="true"
+            style={
+              {
+                "--value": Math.min(100, Math.max(0, value)),
+              } as React.CSSProperties
+            }
+          />
+          <div className="resource-mega-number">
+            {value.toFixed(0)}
+            <span className="resource-percent-sign">%</span>
+          </div>
+        </div>
+      )}
       <small>{foot}</small>
     </div>
   );
@@ -121,6 +136,7 @@ export function AdCard({
       className={`node-ad tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
       aria-label={node.name}
     >
+      <div className="node-ad-border-animate" aria-hidden="true" />
       {isHot && (
         <span className="hot-badge" aria-label="高负载节点">
           <Flame size={16} fill="currentColor" />
