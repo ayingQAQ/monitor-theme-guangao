@@ -2283,3 +2283,56 @@ select:focus-visible {
 [data-motion-visible="false"] *::after {
   animation-play-state: paused !important;
 }
+
+/* Paper sign and compact settings keep the controls with the page header. */
+.brand {
+  position: relative;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--card-line);
+  border-radius: var(--paper-radius);
+  padding: 10px 16px 10px 10px;
+  box-shadow: 3px 4px 0 color-mix(in srgb, var(--card-line) 25%, transparent);
+}
+.brand img { transform: rotate(-5deg); flex-shrink: 0; }
+.appearance-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  background: var(--sun);
+  color: #201809;
+  border: 2px solid var(--card-line);
+  border-radius: var(--paper-radius);
+  box-shadow: 2px 3px 0 color-mix(in srgb, var(--card-line) 25%, transparent);
+  font-size: 11px;
+  font-weight: 700;
+}
+.appearance-trigger[data-state="open"] { box-shadow: 1px 1px 0 var(--card-line); }
+.appearance-panel {
+  z-index: 40;
+  display: grid;
+  width: min(310px, calc(100vw - 32px));
+  box-sizing: border-box;
+  gap: 12px;
+  border: 2px solid var(--card-line);
+  box-shadow: 4px 5px 0 color-mix(in srgb, var(--card-line) 25%, transparent);
+  transform-origin: var(--radix-popover-content-transform-origin);
+}
+.appearance-panel[data-state="open"] { animation: paper-menu-in 180ms ease-out; }
+.appearance-title { border-bottom: 1px dashed var(--card-line); padding-bottom: 8px; font-size: 12px; }
+.appearance-panel label { justify-content: space-between; }
+.appearance-panel > button { text-align: left; }
+.offer-price.is-free > strong { display: flex; align-items: center; gap: 7px; }
+.offer-price.is-free > strong svg { flex-shrink: 0; }
+.expiry-free { border-style: solid; border-radius: 50% 48% 46% 50%; transform: rotate(-6deg); }
+.expiry-free:not(.expired) { background: var(--tone); color: var(--tone-ink); }
+.expiry-open strong { display: flex; align-items: center; gap: 3px; font-size: 11px; }
+@media (max-width: 640px) {
+  .masthead { flex-wrap: wrap; gap: 10px; }
+  .brand { flex: 1 1 calc(100% - 118px); padding: 8px; }
+  .appearance-trigger { order: 1; margin-left: auto; }
+  .brand { order: 0; }
+  .mast-sticker, .admin-link { order: 2; }
+}

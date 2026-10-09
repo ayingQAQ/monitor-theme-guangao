@@ -10,9 +10,11 @@ const page = await browser.newPage({
 await page.goto("http://127.0.0.1:5173/");
 await page.getByRole("article").first().waitFor();
 for (const variant of ["promo", "neon", "retro"]) {
+  await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
   await page.getByRole("option", { name: { promo: "红黄促销墙", neon: "紫绿广告墙", retro: "复古 GIF 广告墙" }[variant] }).click();
   await page.locator(`.monitor-app[data-variant="${variant}"]`).waitFor();
+  await page.keyboard.press("Escape");
   await page.getByText("演示数据 · 非真实节点", { exact: true }).waitFor();
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({
@@ -21,8 +23,10 @@ for (const variant of ["promo", "neon", "retro"]) {
   });
   if (variant === "promo") await page.screenshot({ path: "preview.png" });
 }
-await page.getByRole("combobox", { name: "广告墙风格" }).click();
+await page.getByRole("button", { name: "外观设置", exact: true }).click();
+  await page.getByRole("combobox", { name: "广告墙风格" }).click();
 await page.getByRole("option", { name: "红黄促销墙" }).click();
+await page.keyboard.press("Escape");
 await page.setViewportSize({ width: 390, height: 844 });
 await page.evaluate(() => scrollTo(0, 0));
 await page.screenshot({ path: "docs/previews/mobile.png", fullPage: true });

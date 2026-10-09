@@ -27,7 +27,8 @@ for (const variant of ["promo", "neon", "retro"]) {
       expect(await card.evaluate((element) => element.getBoundingClientRect().width)).toBeGreaterThan(250);
     }
     await expect(page.getByRole("article").first().getByText("12.8%", { exact: true })).toBeVisible();
-    await page.getByRole("button", { name: "关闭边框灯" }).click();
+    await page.getByRole("button", { name: "外观设置", exact: true }).click();
+  await page.getByRole("button", { name: "关闭边框灯" }).click();
     await expect(page.getByRole("button", { name: "开启边框灯" })).toBeVisible();
     await page.getByRole("button", { name: "停止动效" }).click();
     await expect(page.getByRole("button", { name: "恢复动效" })).toBeVisible();

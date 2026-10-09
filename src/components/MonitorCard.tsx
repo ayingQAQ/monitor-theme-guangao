@@ -5,6 +5,8 @@ import {
   ArrowUp,
   Flame,
   Cpu,
+  Gift,
+  Infinity as InfinityIcon,
   HardDrive,
   MemoryStick,
 } from "lucide-react";
@@ -115,6 +117,7 @@ export function MonitorCard({
       ? node.expires_in
       : daysUntil(node.expires_at);
   const used = usage(node);
+  const isFree = node.price === 0;
   const remaining =
     node.traffic_limit > 0 ? Math.max(0, node.traffic_limit - used) : null;
   const remainingPercent =
@@ -173,18 +176,46 @@ export function MonitorCard({
             : "实时状态暂停，累计流量仍可查看")}
       </p>
       <div className="offer-row">
-        <div className="offer-price">
-          <small>节点费用 / {cycle(node.billing_cycle) || "周期未设置"}</small>
+        <div className={`offer-price ${isFree ? "is-free" : ""}`}>
+          <small>
+            {isFree
+              ? "免费节点 / 零元领用"
+              : `节点费用 / ${cycle(node.billing_cycle) || "周期未设置"}`}
+          </small>
           <strong>
-            {node.price > 0 ? money(node.price, node.currency) : "未设置"}
+            {isFree ? (
+              <>
+                <Gift size={22} aria-hidden="true" /> FREE
+              </>
+            ) : node.price > 0 ? (
+              money(node.price, node.currency)
+            ) : (
+              "未设置"
+            )}
           </strong>
         </div>
         {days !== null && Number.isFinite(days) && (
-          <div className={`expiry-ticket ${days < 0 ? "expired" : ""}`}>
+          <div
+            className={`expiry-ticket ${isFree ? "expiry-free" : ""} ${days < 0 ? "expired" : ""}`}
+          >
             <span>
-              {days < 0 ? "到期提醒" : days === 0 ? "今天到期" : "距离到期"}
+              {days < 0
+                ? "到期提醒"
+                : days === 0
+                  ? "今天到期"
+                  : isFree
+                    ? "免费有效期"
+                    : "距离到期"}
             </span>
             <strong>{days < 0 ? `已过期 ${-days} 天` : `${days} 天`}</strong>
+          </div>
+        )}
+        {isFree && (days === null || !Number.isFinite(days)) && (
+          <div className="expiry-ticket expiry-free expiry-open">
+            <span>免费领用</span>
+            <strong>
+              <InfinityIcon size={20} aria-hidden="true" /> 未设到期
+            </strong>
           </div>
         )}
       </div>

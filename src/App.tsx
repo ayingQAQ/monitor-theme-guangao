@@ -7,8 +7,9 @@ import {
   Zap,
   ChevronDown,
   Check,
+  SlidersHorizontal,
 } from "lucide-react";
-import { Select } from "radix-ui";
+import { Popover, Select } from "radix-ui";
 import { api, groupsOf, useNodes } from "@/lib/api";
 import { loadConfig } from "@/lib/config";
 import { bytes, rate } from "@/lib/format";
@@ -198,6 +199,90 @@ export default function App() {
           {me.authed ? "进入后台" : "站长入口"}
           <ArrowUpRight size={15} />
         </a>
+        <Popover.Root>
+          <Popover.Trigger className="appearance-trigger" aria-label="外观设置">
+            <SlidersHorizontal size={16} /> 外观设置
+          </Popover.Trigger>
+          <Popover.Content
+            className="visitor-controls appearance-panel"
+            aria-label="外观设置"
+            align="end"
+            sideOffset={12}
+            collisionPadding={16}
+          >
+            <strong className="appearance-title">广告墙 · 外观设置</strong>
+            <label>
+              换个广告皮肤
+              <Select.Root
+                value={preference || "site"}
+                onValueChange={(value) => {
+                  const next = value === "site" ? "" : value;
+                  setPreference(next);
+                  writePreference("guangao.variant", next);
+                }}
+              >
+                <Select.Trigger
+                  className="theme-select-trigger"
+                  aria-label="广告墙风格"
+                >
+                  <Select.Value />
+                  <Select.Icon>
+                    <ChevronDown size={14} />
+                  </Select.Icon>
+                </Select.Trigger>
+                <Select.Content
+                  className="theme-select-menu"
+                  position="popper"
+                  side="bottom"
+                  align="end"
+                  sideOffset={10}
+                  collisionPadding={16}
+                >
+                  <Select.Viewport>
+                    {[
+                      ["site", "跟随站点"],
+                      ["promo", "红黄促销墙"],
+                      ["neon", "紫绿广告墙"],
+                      ["retro", "复古 GIF 广告墙"],
+                    ].map(([value, label]) => (
+                      <Select.Item
+                        key={value}
+                        value={value}
+                        className="theme-select-option"
+                      >
+                        <Select.ItemText>{label}</Select.ItemText>
+                        <Select.ItemIndicator>
+                          <Check size={14} />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Root>
+            </label>
+            <button
+              aria-pressed={motionStopped}
+              onClick={() => {
+                const next = !motionStopped;
+                setMotionStopped(next);
+                writePreference("guangao.motion", next ? "off" : "on");
+              }}
+            >
+              {motionStopped ? "恢复动效" : "停止动效"}
+            </button>
+            <button
+              aria-pressed={borderLightStopped}
+              onClick={() => {
+                const next = !borderLightStopped;
+                setBorderLightStopped(next);
+                writePreference("guangao.borderlight", next ? "off" : "on");
+              }}
+            >
+              {borderLightStopped ? "开启边框灯" : "关闭边框灯"}
+            </button>
+            <small>仅影响当前浏览器</small>
+          </Popover.Content>
+        </Popover.Root>
       </header>
       {demo && <div className="demo-label">演示数据 · 非真实节点</div>}
       {Boolean(config?.notice) && (
@@ -275,7 +360,11 @@ export default function App() {
               </nav>
             )}
             {config?.show_summary !== false && (
-              <section ref={observeMotion} className="overview-panel" aria-label="节点汇总">
+              <section
+                ref={observeMotion}
+                className="overview-panel"
+                aria-label="节点汇总"
+              >
                 <div className="hero-copy">
                   <span className="eyebrow">
                     <Zap size={15} fill="currentColor" /> 服务器实时展销中心
@@ -324,7 +413,11 @@ export default function App() {
                 </span>
               </section>
             )}
-            <div ref={observeMotion} className="ticker" aria-label="专区实时汇总">
+            <div
+              ref={observeMotion}
+              className="ticker"
+              aria-label="专区实时汇总"
+            >
               <span className="ticker-label">实时快报</span>
               <div className="ticker-window">
                 <div className="ticker-track">
@@ -373,7 +466,12 @@ export default function App() {
             ) : (
               <div className="node-grid">
                 {shown.map((node, index) => (
-                  <MonitorCard key={node.id} node={node} index={index} onOpen={go} />
+                  <MonitorCard
+                    key={node.id}
+                    node={node}
+                    index={index}
+                    onOpen={go}
+                  />
                 ))}
               </div>
             )}
@@ -407,78 +505,6 @@ export default function App() {
         <div>
           <strong>GUANGAO THEME</strong>
           <span>每个广告位，都是探针信息。Powered by Monitor.</span>
-        </div>
-        <div className="visitor-controls">
-          <label>
-            换个广告皮肤
-            <Select.Root
-              value={preference || "site"}
-              onValueChange={(value) => {
-                const next = value === "site" ? "" : value;
-                setPreference(next);
-                writePreference("guangao.variant", next);
-              }}
-            >
-              <Select.Trigger
-                className="theme-select-trigger"
-                aria-label="广告墙风格"
-              >
-                <Select.Value />
-                <Select.Icon>
-                  <ChevronDown size={14} />
-                </Select.Icon>
-              </Select.Trigger>
-              <Select.Content
-                className="theme-select-menu"
-                position="popper"
-                side="top"
-                align="end"
-                sideOffset={10}
-                collisionPadding={16}
-              >
-                <Select.Viewport>
-                  {[
-                    ["site", "跟随站点"],
-                    ["promo", "红黄促销墙"],
-                    ["neon", "紫绿广告墙"],
-                    ["retro", "复古 GIF 广告墙"],
-                  ].map(([value, label]) => (
-                    <Select.Item
-                      key={value}
-                      value={value}
-                      className="theme-select-option"
-                    >
-                      <Select.ItemText>{label}</Select.ItemText>
-                      <Select.ItemIndicator>
-                        <Check size={14} />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                  ))}
-                </Select.Viewport>
-              </Select.Content>
-            </Select.Root>
-          </label>
-          <button
-            aria-pressed={motionStopped}
-            onClick={() => {
-              const next = !motionStopped;
-              setMotionStopped(next);
-              writePreference("guangao.motion", next ? "off" : "on");
-            }}
-          >
-            {motionStopped ? "恢复动效" : "停止动效"}
-          </button>
-          <button
-            aria-pressed={borderLightStopped}
-            onClick={() => {
-              const next = !borderLightStopped;
-              setBorderLightStopped(next);
-              writePreference("guangao.borderlight", next ? "off" : "on");
-            }}
-          >
-            {borderLightStopped ? "开启边框灯" : "关闭边框灯"}
-          </button>
-          <small>仅影响当前浏览器</small>
         </div>
       </footer>
     </div>

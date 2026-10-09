@@ -58,12 +58,14 @@ test("border light switch controls every light layer and survives reload", async
   const light = page.locator(".node-border-light").first();
   await expect(light).toHaveCSS("animation-name", "border-run");
   await expect(light).toHaveCSS("animation-duration", "20s");
+  await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("button", { name: "关闭边框灯" }).click();
   await expect(light).toHaveCSS("opacity", "0");
   await expect(light).toHaveCSS("animation-name", "none");
   expect(await page.getByRole("article").first().evaluate((card) => getComputedStyle(card, "::before").content)).toBe("none");
   await page.reload();
   await expect(light).toHaveCSS("opacity", "0");
+  await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("button", { name: "开启边框灯" }).click();
   await expect(light).toHaveCSS("animation-name", "border-run");
   await expect(light).toHaveCSS("animation-duration", "20s");
@@ -257,6 +259,7 @@ test("visitor variant preference survives reload and invalid saved values fall b
   page,
 }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
   await page.getByRole("option", { name: "紫绿广告墙" }).click();
   await expect(page.locator(".monitor-app")).toHaveAttribute("data-variant", "neon");

@@ -11,6 +11,7 @@ test('offscreen decorations pause and resume without changing card layout', asyn
  await card.scrollIntoViewIfNeeded();
  await expect(card.locator('.node-border-light')).toHaveCSS('animation-play-state','running');
  expect((await card.boundingBox())!.height).toBeCloseTo(size!.height,0);
+ await page.getByRole('button',{name:'外观设置',exact:true}).click();
  await page.getByRole('button',{name:'关闭边框灯'}).click();
  await expect(card.locator('.node-border-light')).toHaveCSS('animation-name','none');
 });
