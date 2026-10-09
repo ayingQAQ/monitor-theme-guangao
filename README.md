@@ -45,10 +45,10 @@ https://github.com/ayingQAQ/monitor-theme-guangao
 
 也可以从 [最新正式 Release](https://github.com/ayingQAQ/monitor-theme-guangao/releases/latest) 下载 `theme.tar.gz`，在后台上传并选择「广告墙 · Guangao」。请下载主题包，而不是 GitHub 自动生成的 Source code 压缩包。
 
-主题短名为 `monitor-theme-guangao`，安装包解压结构：
+主题短名为 `monitor-theme-guangao`。压缩包根目录直接包含以下文件，不能再套一层主题目录；Hub 安装成功后自动创建同名目录：
 
 ```text
-monitor-theme-guangao/
+theme.tar.gz（解压根目录）
 ├── theme.json
 ├── preview.png
 ├── LICENSE

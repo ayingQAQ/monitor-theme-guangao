@@ -59,13 +59,16 @@ if (total > 64 * 1024 ** 2 || count > 2000)
   throw new Error("Theme exceeds installer limits");
 const archive = spawnSync(
   "tar",
-  ["-czf", "theme.tar.gz", "-C", ".cache/package", manifest.short],
+  ["-czf", "theme.tar.gz", "-C", stage, "dist", "theme.json", "preview.png", "LICENSE", "THIRD_PARTY.md", "THIRD_PARTY_NOTICES.txt"],
   { stdio: "inherit" },
 );
 if (archive.status !== 0) throw new Error("tar failed");
 const data = await readFile("theme.tar.gz");
 gunzipSync(data); // validates stream completion and CRC, same purpose as gzip -t
 if (data.length > 32 * 1024 ** 2) throw new Error("Archive exceeds 32 MiB");
+// Hub reads the manifest directly from the staging root, then creates <short>.
+const layout = spawnSync(process.execPath, ["scripts/check-package.mjs"], { stdio: "inherit" });
+if (layout.status !== 0) throw new Error("Hub archive layout validation failed");
 await writeFile(
   ".cache/theme.sha256",
   `${createHash("sha256").update(data).digest("hex")}  theme.tar.gz\n`,
