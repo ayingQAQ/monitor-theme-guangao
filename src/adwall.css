@@ -263,6 +263,20 @@ select:focus-visible {
     4px 4px 0 #201809;
   margin: 13px 0 16px;
   overflow-wrap: anywhere;
+  position: relative;
+  display: inline-block;
+}
+.ad-app[data-motion="on"] .hero-copy h1 {
+  animation: text-pop 4s ease-in-out infinite;
+}
+@keyframes text-pop {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
 }
 .hero-copy p {
   font-size: 12px;
@@ -376,6 +390,12 @@ select:focus-visible {
     25% 6%,
     41% 13%
   );
+  box-shadow: 0 4px 12px rgba(237, 51, 43, 0.4);
+}
+.ad-app[data-motion="on"] .hero-burst {
+  animation:
+    pulse-glow 2s ease-in-out infinite,
+    rotate-spark 8s linear infinite;
 }
 .hero-burst > span {
   font-size: 14px;
@@ -406,6 +426,30 @@ select:focus-visible {
   height: 34px;
   font-size: 11px;
   font-weight: 700;
+  position: relative;
+  overflow: hidden;
+}
+.ticker::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(90deg, var(--paper) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.ticker::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  background: linear-gradient(270deg, var(--paper) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 .ticker-label {
   display: flex;
@@ -414,6 +458,10 @@ select:focus-visible {
   color: var(--paper);
   background: var(--ink);
   flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 .ticker-window {
   min-width: 0;
@@ -476,6 +524,25 @@ select:focus-visible {
   gap: 21px;
   align-items: start;
 }
+/* 打破规整：随机倾斜和大小变化 */
+.ad-grid .node-ad:nth-child(6n+1) {
+  transform: rotate(-1.5deg);
+}
+.ad-grid .node-ad:nth-child(6n+2) {
+  transform: rotate(1deg) scale(1.03);
+}
+.ad-grid .node-ad:nth-child(6n+3) {
+  transform: rotate(-0.8deg);
+}
+.ad-grid .node-ad:nth-child(6n+4) {
+  transform: rotate(1.8deg) scale(0.98);
+}
+.ad-grid .node-ad:nth-child(6n+5) {
+  transform: rotate(-1.2deg);
+}
+.ad-grid .node-ad:nth-child(6n+6) {
+  transform: rotate(0.5deg) scale(1.02);
+}
 .node-ad {
   --tone: #ed362c;
   --tone-ink: #fff8e4;
@@ -487,10 +554,67 @@ select:focus-visible {
     transform 0.16s ease,
     box-shadow 0.16s ease;
   position: relative;
+  overflow: hidden;
+}
+.hot-badge {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  background: linear-gradient(135deg, #ff3e00 0%, #ff0000 100%);
+  color: #fff;
+  padding: 8px 12px 8px 8px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  border: 2px solid var(--card-line);
+  box-shadow: -2px 2px 0 var(--card-line);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transform: rotate(12deg);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.ad-app[data-motion="on"] .hot-badge {
+  animation:
+    pulse-glow 1.5s ease-in-out infinite,
+    shake-price 2s ease-in-out infinite;
+}
+.node-ad.is-hot .card-topline {
+  padding-right: 84px;
+}
+.node-ad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, var(--tone) 50%, transparent 50%),
+    linear-gradient(180deg, var(--tone) 50%, transparent 50%),
+    linear-gradient(270deg, var(--tone) 50%, transparent 50%),
+    linear-gradient(0deg, var(--tone) 50%, transparent 50%);
+  background-size:
+    16px 2px,
+    2px 16px,
+    16px 2px,
+    2px 16px;
+  background-position:
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
+  background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.ad-app[data-motion="on"] .node-ad::before {
+  opacity: 0.6;
+  animation: border-run 4s linear infinite;
 }
 .node-ad:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--card-line);
+  transform: translate(-2px, -2px) rotate(0deg) scale(1.05) !important;
+  box-shadow: 8px 8px 0 var(--card-line);
+  z-index: 10;
 }
 .tone-1 {
   --tone: #174ade;
@@ -513,26 +637,46 @@ select:focus-visible {
   --paper: #edf3ff;
   --muted: #dce6ff;
   --border: #c1cff3;
-  background-image: radial-gradient(#235dde20 0.7px, transparent 0.7px);
-  background-size: 6px 6px;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      #235dde15 0,
+      #235dde15 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      #235dde15 0,
+      #235dde15 2px,
+      transparent 2px,
+      transparent 8px
+    );
+  background-size: 12px 12px;
 }
 .ad-app[data-variant="promo"] .tone-2 {
   --paper: #f8ebff;
   --muted: #ead6fb;
   --border: #d8b8ed;
-  background-image: linear-gradient(
-    135deg,
-    #ffffff55 25%,
-    transparent 25%,
-    transparent 75%,
-    #ffffff55 75%
-  );
-  background-size: 16px 16px;
+  background-image:
+    radial-gradient(circle, #692eb320 1px, transparent 1px),
+    radial-gradient(circle, #692eb320 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
 }
 .ad-app[data-variant="promo"] .tone-3 {
   --paper: #fff1b0;
   --muted: #ffe58b;
   --border: #d9b946;
+  background-image: repeating-linear-gradient(
+    0deg,
+    #fcda3320 0,
+    #fcda3320 1px,
+    transparent 1px,
+    transparent 6px
+  );
 }
 .ad-app[data-variant="promo"] .tone-3 .offer-price > strong {
   color: #92500a;
@@ -541,11 +685,28 @@ select:focus-visible {
   --paper: #eaf3ed;
   --muted: #dbe9df;
   --border: #bdd2c4;
+  background-image: repeating-conic-gradient(
+    from 45deg at 10% 10%,
+    #315d5020 0deg 90deg,
+    transparent 90deg 180deg
+  );
+  background-size: 25px 25px;
 }
 .ad-app[data-variant="promo"] .tone-5 {
   --paper: #fff0e6;
   --muted: #ffe0cb;
   --border: #e7c3a6;
+  background-image:
+    linear-gradient(135deg, #f0752d15 25%, transparent 25%),
+    linear-gradient(225deg, #f0752d15 25%, transparent 25%),
+    linear-gradient(45deg, #f0752d15 25%, transparent 25%),
+    linear-gradient(315deg, #f0752d15 25%, transparent 25%);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 0,
+    10px -10px,
+    0 -10px;
 }
 .card-topline {
   display: flex;
@@ -558,12 +719,15 @@ select:focus-visible {
   border-bottom: 2px solid var(--card-line);
   font-size: 10px;
   font-weight: 800;
+  position: relative;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
 }
 .card-topline > span:first-child {
   display: flex;
   align-items: center;
   gap: 4px;
   letter-spacing: 1px;
+  text-transform: uppercase;
 }
 .status-tag {
   display: inline-flex;
@@ -580,6 +744,9 @@ select:focus-visible {
 .status-tag.is-live:before {
   background: currentColor;
   animation: live-breathe 3s ease-in-out infinite;
+}
+.ad-app[data-motion="on"] .status-tag.is-live {
+  animation: blink-tag 1.5s ease-in-out infinite;
 }
 .card-title {
   display: flex;
@@ -604,11 +771,18 @@ select:focus-visible {
   font-weight: 950;
   overflow-wrap: anywhere;
   min-width: 0;
+  text-shadow:
+    1px 1px 0 rgba(255, 255, 255, 0.5),
+    2px 2px 3px rgba(0, 0, 0, 0.1);
 }
 .title-spark {
   color: var(--tone);
   margin-left: auto;
   font-size: 25px;
+  display: inline-block;
+}
+.ad-app[data-motion="on"] .title-spark {
+  animation: rotate-spark 4s ease-in-out infinite;
 }
 .card-remark {
   padding: 0 16px;
@@ -641,6 +815,13 @@ select:focus-visible {
   color: var(--tone);
   letter-spacing: -0.5px;
   overflow-wrap: anywhere;
+  display: inline-block;
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.1),
+    -1px -1px 0 rgba(255, 255, 255, 0.3);
+}
+.ad-app[data-motion="on"] .offer-price > strong {
+  animation: shake-price 3s ease-in-out infinite;
 }
 .expiry-ticket {
   border: 1px dashed var(--ink);
@@ -653,6 +834,10 @@ select:focus-visible {
   text-align: center;
   flex-shrink: 0;
   box-shadow: 2px 2px 0 var(--ink);
+  position: relative;
+}
+.ad-app[data-motion="on"] .expiry-ticket {
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 .expiry-ticket span {
   font-size: 8px;
@@ -676,6 +861,27 @@ select:focus-visible {
   font-size: 9px;
   font-weight: 700;
   background: var(--muted);
+  position: relative;
+}
+.spec-ribbon::before {
+  content: "★";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tone);
+  font-size: 10px;
+  opacity: 0.3;
+}
+.spec-ribbon::after {
+  content: "★";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tone);
+  font-size: 10px;
+  opacity: 0.3;
 }
 .card-resources {
   padding: 15px 16px 9px;
@@ -688,11 +894,49 @@ select:focus-visible {
   align-items: center;
   gap: 4px;
   font-size: 10px;
+  position: relative;
+}
+.ad-resource.is-high > div:first-child::after {
+  content: "⚠";
+  font-size: 12px;
+  color: #ff9500;
+}
+.ad-resource.is-critical > div:first-child::after {
+  content: "🔥";
+  animation: shake-price 2s ease-in-out infinite;
+}
+.ad-resource.is-high strong {
+  color: #ff9500;
+}
+.ad-resource.is-critical strong {
+  color: #ff3b30;
+  animation: blink-tag 1s ease-in-out infinite;
+}
+.ad-resource.is-high .resource-track > span {
+  background: linear-gradient(
+    90deg,
+    #ff9500 0%,
+    #ffb800 50%,
+    #ff9500 100%
+  ) !important;
+  background-size: 200% 100% !important;
+}
+.ad-resource.is-critical .resource-track > span {
+  background: linear-gradient(
+    90deg,
+    #ff3b30 0%,
+    #ff6b30 50%,
+    #ff3b30 100%
+  ) !important;
+  background-size: 200% 100% !important;
+  box-shadow: 0 0 8px #ff3b30;
 }
 .ad-resource strong {
   margin-left: auto;
   font-size: 11px;
   font-weight: 900;
+  color: var(--tone);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 .unavailable {
   font-size: 9px;
@@ -700,16 +944,44 @@ select:focus-visible {
   color: var(--muted-foreground);
 }
 .resource-track {
-  height: 5px;
+  height: 8px;
   margin-top: 5px;
   background: var(--muted);
-  border: 1px solid var(--border);
+  border: 2px solid var(--card-line);
   overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 .resource-track > span {
   height: 100%;
   display: block;
-  background: var(--tone);
+  background: linear-gradient(
+    90deg,
+    var(--tone) 0%,
+    color-mix(in srgb, var(--tone) 80%, white) 50%,
+    var(--tone) 100%
+  );
+  background-size: 200% 100%;
+  position: relative;
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ad-app[data-motion="on"] .resource-track > span {
+  animation: progress-shine 2s ease-in-out infinite;
+}
+.ad-app[data-motion="on"] .resource-track > span::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: progress-flash 3s ease-in-out infinite;
 }
 .ad-resource > small {
   display: block;
@@ -727,10 +999,20 @@ select:focus-visible {
   justify-content: space-between;
   font-size: 9px;
   color: var(--muted-foreground);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--muted) 20%,
+    var(--muted) 80%,
+    transparent 100%
+  );
+  border-left: 3px solid var(--tone);
+  border-right: 3px solid var(--tone);
 }
 .traffic-row b {
   font-weight: 800;
-  color: var(--ink);
+  color: var(--tone);
+  font-size: 10px;
 }
 .speed-row {
   display: flex;
@@ -738,15 +1020,29 @@ select:focus-visible {
   gap: 7px;
   padding: 11px 16px;
   border-top: 1px dashed var(--border);
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    var(--muted) 10px,
+    var(--muted) 11px
+  );
 }
 .speed-row span {
   display: flex;
   gap: 5px;
   align-items: center;
   font-size: 11px;
+  padding: 4px 8px;
+  background: var(--paper);
+  border-radius: 2px;
+  flex: 1;
+  justify-content: center;
 }
 .speed-row strong {
-  font-weight: 800;
+  font-weight: 900;
+  color: var(--tone);
+  font-size: 13px;
 }
 .card-foot {
   display: flex;
@@ -773,6 +1069,28 @@ select:focus-visible {
   padding: 7px 12px;
   box-shadow: 2px 2px 0 var(--card-line);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.card-foot a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s,
+    height 0.6s;
+}
+.card-foot a:hover::before {
+  width: 300px;
+  height: 300px;
 }
 .ad-resource > div:first-child {
   font-size: 11px;
@@ -1050,7 +1368,37 @@ select:focus-visible {
   --tone-ink: #190729;
   box-shadow:
     0 0 0 1px #bc71ff,
-    4px 4px 0 #5b258c;
+    4px 4px 0 #5b258c,
+    0 0 20px rgba(188, 113, 255, 0.3);
+}
+[data-variant="neon"] .resource-track {
+  background: #41225f;
+  border-color: #bc71ff;
+  box-shadow:
+    inset 0 0 10px rgba(188, 113, 255, 0.3),
+    0 0 5px rgba(188, 113, 255, 0.2);
+}
+[data-variant="neon"] .resource-track > span {
+  background: linear-gradient(
+    90deg,
+    var(--tone) 0%,
+    #bc71ff 50%,
+    var(--tone) 100%
+  );
+  background-size: 200% 100%;
+  box-shadow: 0 0 10px currentColor;
+}
+[data-variant="neon"] .card-title h3 {
+  text-shadow:
+    0 0 10px var(--tone),
+    0 0 20px var(--tone),
+    2px 2px 0 #5b258c;
+}
+[data-variant="neon"] .offer-price > strong {
+  text-shadow:
+    0 0 15px var(--tone),
+    0 0 30px var(--tone),
+    3px 3px 0 #190729;
 }
 [data-variant="neon"] .tone-1,
 [data-variant="neon"] .tone-4 {
@@ -1094,6 +1442,36 @@ select:focus-visible {
     var(--tone) 0 7px,
     transparent 7px 9px
   );
+  animation: none;
+}
+[data-variant="retro"] .resource-track {
+  border: 2px solid #111;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
+  background: #ddd;
+}
+[data-variant="retro"] .card-title h3 {
+  text-shadow:
+    2px 0 0 #ff0000,
+    -2px 0 0 #00ff00,
+    0 2px 0 #0000ff;
+  font-style: italic;
+}
+[data-variant="retro"] .offer-price > strong {
+  text-shadow:
+    3px 3px 0 #000,
+    -1px -1px 0 #fff,
+    5px 5px 0 rgba(0, 0, 0, 0.3);
+}
+[data-motion="on"][data-variant="retro"] .resource-track > span {
+  animation: retro-progress 1s steps(8) infinite;
+}
+@keyframes retro-progress {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 16px 0;
+  }
 }
 [data-variant="retro"] .title-spark {
   animation: retro-twist 4s steps(4) infinite;
@@ -1118,6 +1496,90 @@ select:focus-visible {
 @keyframes retro-twist {
   to {
     transform: rotate(360deg);
+  }
+}
+@keyframes progress-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+@keyframes progress-flash {
+  0% {
+    transform: translateX(0);
+  }
+  50%,
+  100% {
+    transform: translateX(200%);
+  }
+}
+@keyframes border-run {
+  0% {
+    background-position:
+      0 0,
+      100% 0,
+      100% 100%,
+      0 100%;
+  }
+  100% {
+    background-position:
+      100% 0,
+      100% 100%,
+      0 100%,
+      0 0;
+  }
+}
+@keyframes blink-tag {
+  0%,
+  49%,
+  100% {
+    opacity: 1;
+  }
+  50%,
+  99% {
+    opacity: 0.3;
+  }
+}
+@keyframes shake-price {
+  0%,
+  100% {
+    translate: 0;
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    translate: -2px;
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    translate: 2px;
+  }
+}
+@keyframes rotate-spark {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 2px var(--tone)) drop-shadow(0 0 4px var(--tone));
+  }
+  50% {
+    filter: drop-shadow(0 0 6px var(--tone)) drop-shadow(0 0 12px var(--tone));
   }
 }
 [data-motion="off"] *,

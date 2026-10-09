@@ -46,8 +46,13 @@ function Resource({
   foot: string;
   icon: React.ReactNode;
 }) {
+  const isHigh = value !== null && value >= 80;
+  const isCritical = value !== null && value >= 95;
+
   return (
-    <div className="ad-resource">
+    <div
+      className={`ad-resource ${isHigh ? "is-high" : ""} ${isCritical ? "is-critical" : ""}`}
+    >
       <div>
         {icon}
         <span>{label}</span>
@@ -108,11 +113,20 @@ export function AdCard({
     "新鲜上架",
   ];
   const tone = index % 6;
+  const isHot =
+    node.online && m && (m.cpu > 70 || percent(m.mem_used, m.mem_total) > 80);
+
   return (
     <article
-      className={`node-ad tone-${tone} ${!node.online ? "is-offline" : ""}`}
+      className={`node-ad tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
       aria-label={node.name}
     >
+      {isHot && (
+        <span className="hot-badge" aria-label="高负载节点">
+          <Flame size={16} fill="currentColor" />
+          HOT
+        </span>
+      )}
       <div className="card-topline">
         <span>
           <Flame size={13} />
