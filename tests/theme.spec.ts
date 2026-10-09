@@ -57,6 +57,7 @@ test("border light switch controls every light layer and survives reload", async
   await page.goto("/");
   const light = page.locator(".node-border-light").first();
   await expect(light).toHaveCSS("animation-name", "border-run");
+  await expect(light).toHaveCSS("animation-duration", "20s");
   await page.getByRole("button", { name: "关闭边框灯" }).click();
   await expect(light).toHaveCSS("opacity", "0");
   await expect(light).toHaveCSS("animation-name", "none");
@@ -65,6 +66,7 @@ test("border light switch controls every light layer and survives reload", async
   await expect(light).toHaveCSS("opacity", "0");
   await page.getByRole("button", { name: "开启边框灯" }).click();
   await expect(light).toHaveCSS("animation-name", "border-run");
+  await expect(light).toHaveCSS("animation-duration", "20s");
   await expect(light).toHaveCSS("opacity", "0.6");
 });
 

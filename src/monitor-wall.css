@@ -762,7 +762,7 @@ select:focus-visible {
 .monitor-app[data-motion="on"][data-borderlight="on"]
   .node-border-light {
   opacity: 0.6;
-  animation: border-run 4s steps(64) infinite;
+  animation: border-run 20s steps(320) infinite;
 }
 .tone-1 {
   --tone: #174ade;
