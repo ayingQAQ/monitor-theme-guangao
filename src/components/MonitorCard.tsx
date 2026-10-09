@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { appearanceFor } from "@/lib/card-appearance";
 import { observeMotion } from "@/lib/motion-visibility";
 import {
   ArrowUpRight,
@@ -104,11 +106,9 @@ function Resource({
 
 export function MonitorCard({
   node,
-  index,
   onOpen,
 }: {
   node: Node;
-  index: number;
   onOpen: (id: number) => void;
 }) {
   const m = node.online ? node.metrics : null;
@@ -137,14 +137,15 @@ export function MonitorCard({
     "状态追踪",
     "新鲜上架",
   ];
-  const tone = index % 6;
+  const [appearance] = useState(() => appearanceFor(node.id));
+  const { tone, pattern, sticker, tilt, label } = appearance;
   const isHot =
     node.online && m && (m.cpu > 70 || percent(m.mem_used, m.mem_total) > 80);
 
   return (
     <article
       ref={observeMotion}
-      className={`node-card tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
+      className={`node-card tone-${tone} pattern-${pattern} sticker-${sticker} tilt-${tilt} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
       aria-label={node.name}
     >
       <div className="node-border-light" aria-hidden="true" />
@@ -157,7 +158,7 @@ export function MonitorCard({
       <div className="card-topline">
         <span>
           <Flame size={13} />
-          {labels[tone]}
+          {labels[label]}
         </span>
         <span className={`status-tag ${m ? "is-live" : ""}`}>{state}</span>
       </div>

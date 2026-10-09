@@ -599,22 +599,22 @@ select:focus-visible {
   align-items: start;
 }
 /* 纸质风格：微小倾斜，像纸片堆叠 */
-.node-grid .node-card:nth-child(6n + 1) {
+.node-grid .node-card.tilt-0 {
   transform: rotate(-0.5deg);
 }
-.node-grid .node-card:nth-child(6n + 2) {
+.node-grid .node-card.tilt-1 {
   transform: rotate(0.3deg);
 }
-.node-grid .node-card:nth-child(6n + 3) {
+.node-grid .node-card.tilt-2 {
   transform: rotate(-0.3deg);
 }
-.node-grid .node-card:nth-child(6n + 4) {
+.node-grid .node-card.tilt-3 {
   transform: rotate(0.6deg);
 }
-.node-grid .node-card:nth-child(6n + 5) {
+.node-grid .node-card.tilt-4 {
   transform: rotate(-0.4deg);
 }
-.node-grid .node-card:nth-child(6n + 6) {
+.node-grid .node-card.tilt-5 {
   transform: rotate(0.2deg);
 }
 .node-card {
@@ -667,37 +667,37 @@ select:focus-visible {
   white-space: nowrap;
   pointer-events: none;
 }
-.node-card.tone-0::after {
+.node-card.sticker-0::after {
   content: "限时";
   top: -8px;
   right: 20px;
   transform: rotate(8deg);
 }
-.node-card.tone-1::after {
+.node-card.sticker-1::after {
   content: "精选";
   top: 15px;
   right: -12px;
   transform: rotate(-15deg);
 }
-.node-card.tone-2::after {
+.node-card.sticker-2::after {
   content: "推荐";
   top: -6px;
   left: 15px;
   transform: rotate(-5deg);
 }
-.node-card.tone-3::after {
+.node-card.sticker-3::after {
   content: "NEW";
   bottom: 60px;
   right: -10px;
   transform: rotate(12deg);
 }
-.node-card.tone-4::after {
+.node-card.sticker-4::after {
   content: "特惠";
   top: 10px;
   left: -8px;
   transform: rotate(6deg);
 }
-.node-card.tone-5::after {
+.node-card.sticker-5::after {
   content: "火爆";
   bottom: 80px;
   left: -10px;
@@ -785,46 +785,19 @@ select:focus-visible {
   --paper: #edf3ff;
   --muted: #dce6ff;
   --border: #c1cff3;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      #235dde15 0,
-      #235dde15 2px,
-      transparent 2px,
-      transparent 8px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      #235dde15 0,
-      #235dde15 2px,
-      transparent 2px,
-      transparent 8px
-    );
-  background-size: 12px 12px;
+
 }
 .monitor-app[data-variant="promo"] .tone-2 {
   --paper: #f8ebff;
   --muted: #ead6fb;
   --border: #d8b8ed;
-  background-image:
-    radial-gradient(circle, #692eb320 1px, transparent 1px),
-    radial-gradient(circle, #692eb320 1px, transparent 1px);
-  background-size: 20px 20px;
-  background-position:
-    0 0,
-    10px 10px;
+
 }
 .monitor-app[data-variant="promo"] .tone-3 {
   --paper: #fff1b0;
   --muted: #ffe58b;
   --border: #d9b946;
-  background-image: repeating-linear-gradient(
-    0deg,
-    #fcda3320 0,
-    #fcda3320 1px,
-    transparent 1px,
-    transparent 6px
-  );
+
 }
 .monitor-app[data-variant="promo"] .tone-3 .offer-price > strong {
   color: #92500a;
@@ -833,22 +806,66 @@ select:focus-visible {
   --paper: #eaf3ed;
   --muted: #dbe9df;
   --border: #bdd2c4;
-  background-image: repeating-conic-gradient(
-    from 45deg at 10% 10%,
-    #315d5020 0deg 90deg,
-    transparent 90deg 180deg
-  );
-  background-size: 25px 25px;
+
 }
 .monitor-app[data-variant="promo"] .tone-5 {
   --paper: #fff0e6;
   --muted: #ffe0cb;
   --border: #e7c3a6;
+
+}
+
+.monitor-app[data-variant="promo"] .node-card.tone-3 { --pattern-ink: #92500a; }
+.node-card.pattern-1 {
   background-image:
-    linear-gradient(135deg, #f0752d15 25%, transparent 25%),
-    linear-gradient(225deg, #f0752d15 25%, transparent 25%),
-    linear-gradient(45deg, #f0752d15 25%, transparent 25%),
-    linear-gradient(315deg, #f0752d15 25%, transparent 25%);
+    repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 0,
+      color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 2px,
+      transparent 2px,
+      transparent 8px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 0,
+      color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 2px,
+      transparent 2px,
+      transparent 8px
+    );
+  background-size: 12px 12px;
+}
+.node-card.pattern-2 {
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 1px, transparent 1px),
+    radial-gradient(circle, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position:
+    0 0,
+    10px 10px;
+}
+.node-card.pattern-3 {
+  background-image: repeating-linear-gradient(
+    0deg,
+    color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 0,
+    color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+}
+.node-card.pattern-4 {
+  background-image: repeating-conic-gradient(
+    from 45deg at 10% 10%,
+    color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 0deg 90deg,
+    transparent 90deg 180deg
+  );
+  background-size: 25px 25px;
+}
+.node-card.pattern-5 {
+  background-image:
+    linear-gradient(135deg, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 25%, transparent 25%),
+    linear-gradient(225deg, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 25%, transparent 25%),
+    linear-gradient(45deg, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 25%, transparent 25%),
+    linear-gradient(315deg, color-mix(in srgb, var(--pattern-ink, var(--tone)) 12%, transparent) 25%, transparent 25%);
   background-size: 20px 20px;
   background-position:
     0 0,
