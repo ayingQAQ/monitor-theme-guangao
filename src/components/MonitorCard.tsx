@@ -51,7 +51,7 @@ function Resource({
 
   return (
     <div
-      className={`ad-resource ${isHigh ? "is-high" : ""} ${isCritical ? "is-critical" : ""}`}
+      className={`resource-tile ${isHigh ? "is-high" : ""} ${isCritical ? "is-critical" : ""}`}
     >
       <div>
         {icon}
@@ -99,7 +99,7 @@ function Resource({
   );
 }
 
-export function AdCard({
+export function MonitorCard({
   node,
   index,
   onOpen,
@@ -139,10 +139,10 @@ export function AdCard({
 
   return (
     <article
-      className={`node-ad tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
+      className={`node-card tone-${tone} ${!node.online ? "is-offline" : ""} ${isHot ? "is-hot" : ""}`}
       aria-label={node.name}
     >
-      <div className="node-ad-border-animate" aria-hidden="true" />
+      <div className="node-border-light" aria-hidden="true" />
       {isHot && (
         <span className="hot-badge" aria-label="高负载节点">
           <Flame size={16} fill="currentColor" />

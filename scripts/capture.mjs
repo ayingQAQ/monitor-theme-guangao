@@ -12,7 +12,7 @@ await page.getByRole("article").first().waitFor();
 for (const variant of ["promo", "neon", "retro"]) {
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
   await page.getByRole("option", { name: { promo: "红黄促销墙", neon: "紫绿广告墙", retro: "复古 GIF 广告墙" }[variant] }).click();
-  await page.locator(`.ad-app[data-variant="${variant}"]`).waitFor();
+  await page.locator(`.monitor-app[data-variant="${variant}"]`).waitFor();
   await page.getByText("演示数据 · 非真实节点", { exact: true }).waitFor();
   await page.evaluate(() => scrollTo(0, 0));
   await page.screenshot({

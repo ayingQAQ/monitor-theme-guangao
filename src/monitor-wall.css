@@ -13,7 +13,7 @@ select:focus-visible {
   outline: 2px dashed var(--hot, #ef3328);
   outline-offset: 4px;
 }
-.ad-app {
+.monitor-app {
   --speed-number-font:
     "Bahnschrift SemiCondensed", "Arial Narrow", "Microsoft YaHei", sans-serif;
   --paper-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
@@ -50,7 +50,7 @@ select:focus-visible {
   font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
   font-variant-numeric: tabular-nums;
 }
-.ad-app[data-variant="neon"] {
+.monitor-app[data-variant="neon"] {
   --ink: #f4ffe0;
   --paper: #291345;
   --wall: #170a2c;
@@ -80,7 +80,7 @@ select:focus-visible {
     linear-gradient(90deg, #63357833 1px, transparent 1px);
   background-size: 25px 25px;
 }
-.ad-app[data-variant="retro"] {
+.monitor-app[data-variant="retro"] {
   --ink: #111;
   --paper: #fff;
   --wall: #cacaca;
@@ -190,7 +190,7 @@ select:focus-visible {
   font-size: 13px;
   box-shadow: 2px 3px 0 rgba(32, 24, 9, 0.1);
 }
-.ad-main {
+.monitor-main {
   max-width: 1368px;
   margin: auto;
   padding: 0 24px 24px;
@@ -232,7 +232,7 @@ select:focus-visible {
   opacity: 0.65;
   font-size: 10px;
 }
-.hero-ad {
+.overview-panel {
   background: var(--hero-bg);
   border: 3px solid var(--card-line);
   border-radius: 255px 25px 225px 25px/25px 225px 25px 255px;
@@ -246,7 +246,7 @@ select:focus-visible {
   align-items: center;
   overflow: hidden;
 }
-.hero-ad:before {
+.overview-panel:before {
   content: "";
   position: absolute;
   inset: 0;
@@ -285,7 +285,7 @@ select:focus-visible {
   position: relative;
   display: inline-block;
 }
-.ad-app[data-motion="on"] .hero-copy h1 {
+.monitor-app[data-motion="on"] .hero-copy h1 {
   animation: text-pop 4s ease-in-out infinite;
 }
 @keyframes text-pop {
@@ -419,7 +419,7 @@ select:focus-visible {
   );
   box-shadow: 0 4px 12px rgba(237, 51, 43, 0.4);
 }
-.ad-app[data-motion="on"] .hero-burst {
+.monitor-app[data-motion="on"] .hero-burst {
   animation:
     pulse-glow 2s ease-in-out infinite,
     rotate-spark 8s linear infinite;
@@ -591,7 +591,7 @@ select:focus-visible {
   padding-bottom: 4px;
   white-space: nowrap;
 }
-.ad-grid {
+.node-grid {
   container-type: inline-size;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -599,25 +599,25 @@ select:focus-visible {
   align-items: start;
 }
 /* 纸质风格：微小倾斜，像纸片堆叠 */
-.ad-grid .node-ad:nth-child(6n + 1) {
+.node-grid .node-card:nth-child(6n + 1) {
   transform: rotate(-0.5deg);
 }
-.ad-grid .node-ad:nth-child(6n + 2) {
+.node-grid .node-card:nth-child(6n + 2) {
   transform: rotate(0.3deg);
 }
-.ad-grid .node-ad:nth-child(6n + 3) {
+.node-grid .node-card:nth-child(6n + 3) {
   transform: rotate(-0.3deg);
 }
-.ad-grid .node-ad:nth-child(6n + 4) {
+.node-grid .node-card:nth-child(6n + 4) {
   transform: rotate(0.6deg);
 }
-.ad-grid .node-ad:nth-child(6n + 5) {
+.node-grid .node-card:nth-child(6n + 5) {
   transform: rotate(-0.4deg);
 }
-.ad-grid .node-ad:nth-child(6n + 6) {
+.node-grid .node-card:nth-child(6n + 6) {
   transform: rotate(0.2deg);
 }
-.node-ad {
+.node-card {
   --tone: #ed362c;
   --tone-ink: #fff8e4;
   background: var(--paper);
@@ -633,7 +633,7 @@ select:focus-visible {
   padding: 16px;
 }
 /* 边框跑马灯效果 */
-.ad-app[data-borderlight="on"] .node-ad::before {
+.monitor-app[data-borderlight="on"] .node-card::before {
   content: "";
   position: absolute;
   inset: -3px;
@@ -668,7 +668,7 @@ select:focus-visible {
     background-position: 16px 0;
   }
 }
-.node-ad:hover {
+.node-card:hover {
   transform: translateY(-3px) rotate(0deg) !important;
   box-shadow:
     3px 4px 0 rgba(32, 24, 9, 0.2),
@@ -676,7 +676,7 @@ select:focus-visible {
   z-index: 10;
 }
 /* 随机装饰贴纸 */
-.node-ad::after {
+.node-card::after {
   position: absolute;
   font-size: 10px;
   font-weight: 900;
@@ -691,43 +691,43 @@ select:focus-visible {
   white-space: nowrap;
   pointer-events: none;
 }
-.node-ad.tone-0::after {
+.node-card.tone-0::after {
   content: "限时";
   top: -8px;
   right: 20px;
   transform: rotate(8deg);
 }
-.node-ad.tone-1::after {
+.node-card.tone-1::after {
   content: "精选";
   top: 15px;
   right: -12px;
   transform: rotate(-15deg);
 }
-.node-ad.tone-2::after {
+.node-card.tone-2::after {
   content: "推荐";
   top: -6px;
   left: 15px;
   transform: rotate(-5deg);
 }
-.node-ad.tone-3::after {
+.node-card.tone-3::after {
   content: "NEW";
   bottom: 60px;
   right: -10px;
   transform: rotate(12deg);
 }
-.node-ad.tone-4::after {
+.node-card.tone-4::after {
   content: "特惠";
   top: 10px;
   left: -8px;
   transform: rotate(6deg);
 }
-.node-ad.tone-5::after {
+.node-card.tone-5::after {
   content: "火爆";
   bottom: 80px;
   left: -10px;
   transform: rotate(-10deg);
 }
-.ad-app[data-motion="on"] .node-ad::after {
+.monitor-app[data-motion="on"] .node-card::after {
   animation: shake-price 3s ease-in-out infinite;
 }
 .hot-badge {
@@ -749,15 +749,15 @@ select:focus-visible {
   gap: 4px;
   transform: rotate(-3deg);
 }
-.ad-app[data-motion="on"] .hot-badge {
+.monitor-app[data-motion="on"] .hot-badge {
   animation:
     pulse-glow 1.5s ease-in-out infinite,
     shake-price 2s ease-in-out infinite;
 }
-.node-ad.is-hot .card-topline {
+.node-card.is-hot .card-topline {
   padding-right: 84px;
 }
-.node-ad-border-animate {
+.node-border-light {
   content: "";
   position: absolute;
   inset: 0;
@@ -783,8 +783,8 @@ select:focus-visible {
   z-index: 1;
 }
 /* 可通过设置关闭边框动画 */
-.ad-app[data-motion="on"][data-borderlight="on"]
-  .node-ad-border-animate {
+.monitor-app[data-motion="on"][data-borderlight="on"]
+  .node-border-light {
   opacity: 0.6;
   animation: border-run 4s linear infinite;
 }
@@ -805,7 +805,7 @@ select:focus-visible {
   --tone: #f0752d;
   --tone-ink: #201809;
 }
-.ad-app[data-variant="promo"] .tone-1 {
+.monitor-app[data-variant="promo"] .tone-1 {
   --paper: #edf3ff;
   --muted: #dce6ff;
   --border: #c1cff3;
@@ -826,7 +826,7 @@ select:focus-visible {
     );
   background-size: 12px 12px;
 }
-.ad-app[data-variant="promo"] .tone-2 {
+.monitor-app[data-variant="promo"] .tone-2 {
   --paper: #f8ebff;
   --muted: #ead6fb;
   --border: #d8b8ed;
@@ -838,7 +838,7 @@ select:focus-visible {
     0 0,
     10px 10px;
 }
-.ad-app[data-variant="promo"] .tone-3 {
+.monitor-app[data-variant="promo"] .tone-3 {
   --paper: #fff1b0;
   --muted: #ffe58b;
   --border: #d9b946;
@@ -850,10 +850,10 @@ select:focus-visible {
     transparent 6px
   );
 }
-.ad-app[data-variant="promo"] .tone-3 .offer-price > strong {
+.monitor-app[data-variant="promo"] .tone-3 .offer-price > strong {
   color: #92500a;
 }
-.ad-app[data-variant="promo"] .tone-4 {
+.monitor-app[data-variant="promo"] .tone-4 {
   --paper: #eaf3ed;
   --muted: #dbe9df;
   --border: #bdd2c4;
@@ -864,7 +864,7 @@ select:focus-visible {
   );
   background-size: 25px 25px;
 }
-.ad-app[data-variant="promo"] .tone-5 {
+.monitor-app[data-variant="promo"] .tone-5 {
   --paper: #fff0e6;
   --muted: #ffe0cb;
   --border: #e7c3a6;
@@ -919,7 +919,7 @@ select:focus-visible {
   background: currentColor;
   animation: live-breathe 3s ease-in-out infinite;
 }
-.ad-app[data-motion="on"] .status-tag.is-live {
+.monitor-app[data-motion="on"] .status-tag.is-live {
   animation: blink-tag 1.5s ease-in-out infinite;
 }
 .card-title {
@@ -955,7 +955,7 @@ select:focus-visible {
   font-size: 25px;
   display: inline-block;
 }
-.ad-app[data-motion="on"] .title-spark {
+.monitor-app[data-motion="on"] .title-spark {
   animation: rotate-spark 4s ease-in-out infinite;
 }
 .card-remark {
@@ -994,7 +994,7 @@ select:focus-visible {
     2px 2px 0 rgba(0, 0, 0, 0.1),
     -1px -1px 0 rgba(255, 255, 255, 0.3);
 }
-.ad-app[data-motion="on"] .offer-price > strong {
+.monitor-app[data-motion="on"] .offer-price > strong {
   animation: shake-price 3s ease-in-out infinite;
 }
 .expiry-ticket {
@@ -1011,7 +1011,7 @@ select:focus-visible {
   position: relative;
   border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
 }
-.ad-app[data-motion="on"] .expiry-ticket {
+.monitor-app[data-motion="on"] .expiry-ticket {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 .expiry-ticket span {
@@ -1044,7 +1044,7 @@ select:focus-visible {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
-.ad-resource {
+.resource-tile {
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -1057,7 +1057,7 @@ select:focus-visible {
   min-height: 95px;
   box-shadow: 0 1px 3px rgba(32, 24, 9, 0.06);
 }
-.ad-resource::before {
+.resource-tile::before {
   content: "";
   position: absolute;
   top: -2px;
@@ -1069,13 +1069,13 @@ select:focus-visible {
   transition: opacity 0.3s;
   z-index: -1;
 }
-.ad-resource.is-high::before {
+.resource-tile.is-high::before {
   opacity: 0.1;
 }
-.ad-resource.is-critical::before {
+.resource-tile.is-critical::before {
   opacity: 0.2;
 }
-.ad-resource > div:first-child {
+.resource-tile > div:first-child {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -1084,23 +1084,23 @@ select:focus-visible {
   padding-bottom: 4px;
   border-bottom: 1px solid var(--border);
 }
-.ad-resource.is-high > div:first-child::after {
+.resource-tile.is-high > div:first-child::after {
   content: "⚠";
   font-size: 12px;
   color: #ff9500;
 }
-.ad-resource.is-critical > div:first-child::after {
+.resource-tile.is-critical > div:first-child::after {
   content: "🔥";
   animation: shake-price 2s ease-in-out infinite;
 }
-.ad-resource.is-high strong {
+.resource-tile.is-high strong {
   color: #ff9500;
 }
-.ad-resource.is-critical strong {
+.resource-tile.is-critical strong {
   color: #ff3b30;
   animation: blink-tag 1s ease-in-out infinite;
 }
-.ad-resource strong {
+.resource-tile strong {
   margin-left: auto;
   font-size: 11px;
   font-weight: 900;
@@ -1126,10 +1126,10 @@ select:focus-visible {
   position: relative;
   z-index: 2;
 }
-.ad-resource.is-high .resource-mega-number {
+.resource-tile.is-high .resource-mega-number {
   color: #ff9500;
 }
-.ad-resource.is-critical .resource-mega-number {
+.resource-tile.is-critical .resource-mega-number {
   color: #ff3b30;
   text-shadow:
     2px 2px 0 rgba(0, 0, 0, 0.2),
@@ -1158,13 +1158,13 @@ select:focus-visible {
   opacity: 0.28;
   z-index: 1;
 }
-.ad-resource.is-high .resource-circle-bg {
+.resource-tile.is-high .resource-circle-bg {
   --beam-color: #ff9500;
 }
-.ad-resource.is-critical .resource-circle-bg {
+.resource-tile.is-critical .resource-circle-bg {
   --beam-color: #ff3b30;
 }
-.ad-app[data-motion="on"] .resource-circle-bg {
+.monitor-app[data-motion="on"] .resource-circle-bg {
   animation: spotlight-sweep 6s linear infinite;
 }
 @keyframes spotlight-sweep {
@@ -1172,7 +1172,7 @@ select:focus-visible {
     transform: rotate(360deg);
   }
 }
-.ad-resource > small {
+.resource-tile > small {
   overflow-wrap: anywhere;
   display: block;
   font:
@@ -1332,7 +1332,7 @@ select:focus-visible {
   overflow-wrap: anywhere;
   text-shadow: none;
 }
-.ad-app[data-motion="on"] .traffic-stamp {
+.monitor-app[data-motion="on"] .traffic-stamp {
   animation: shake-price 5s ease-in-out infinite;
 }
 .card-foot {
@@ -1371,13 +1371,13 @@ select:focus-visible {
   transform: translateY(-2px);
   box-shadow: 3px 5px 0 rgba(32, 24, 9, 0.25);
 }
-.ad-resource > div:first-child {
+.resource-tile > div:first-child {
   font-size: 11px;
 }
-.ad-resource strong {
+.resource-tile strong {
   font-size: 13px;
 }
-.ad-resource > small {
+.resource-tile > small {
   font-size: 10px;
 }
 .card-remark {
@@ -1452,7 +1452,7 @@ select:focus-visible {
   transform: translateY(-2px) rotate(0deg);
   box-shadow: 4px 6px 0 color-mix(in srgb, var(--sun) 45%, transparent);
 }
-.ad-app[data-motion="on"] .bottom-star {
+.monitor-app[data-motion="on"] .bottom-star {
   animation: rotate-spark 8s ease-in-out infinite;
 }
 .speed-float {
@@ -1665,7 +1665,7 @@ select:focus-visible {
   color: var(--accent);
   text-decoration: underline;
 }
-.detail-ad {
+.node-detail {
   background: var(--paper);
   border: 3px solid var(--card-line);
   box-shadow: 5px 5px 0 var(--card-line);
@@ -1772,7 +1772,7 @@ select:focus-visible {
     3px 3px 0 #190729,
     0 0 20px #d1ff3e55;
 }
-[data-variant="neon"] .node-ad {
+[data-variant="neon"] .node-card {
   --tone: #d1ff3e;
   --tone-ink: #190729;
   box-shadow:
@@ -1830,8 +1830,8 @@ select:focus-visible {
   text-shadow: 3px 3px 0 #d90020;
   letter-spacing: 0;
 }
-[data-variant="retro"] .node-ad,
-[data-variant="retro"] .hero-ad {
+[data-variant="retro"] .node-card,
+[data-variant="retro"] .overview-panel {
   border: 4px ridge #ddd;
   box-shadow: 4px 4px 0 #111;
 }
@@ -2068,7 +2068,7 @@ select:focus-visible {
 }
 /* Scale the original 360px card as a whole; zoom also scales its layout height. */
 @media (min-width: 641px) and (max-width: 1100px) {
-  .node-ad {
+  .node-card {
     width: 360px;
     zoom: calc((100cqw - 40px) / 1080px);
   }
@@ -2102,7 +2102,7 @@ select:focus-visible {
     font-size: 10px;
     white-space: nowrap;
   }
-  .ad-main {
+  .monitor-main {
     padding: 0 14px 20px;
   }
   .demo-label {
@@ -2123,7 +2123,7 @@ select:focus-visible {
   .group-tabs button {
     padding: 5px 9px;
   }
-  .hero-ad {
+  .overview-panel {
     padding: 24px 20px 20px;
     min-height: auto;
     flex-wrap: wrap;
@@ -2210,7 +2210,7 @@ select:focus-visible {
     font-size: 8px;
     padding-top: 4px;
   }
-  .ad-grid {
+  .node-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 17px;
   }
@@ -2229,10 +2229,10 @@ select:focus-visible {
   .card-resources {
     gap: 12px;
   }
-  .ad-resource > div:first-child {
+  .resource-tile > div:first-child {
     font-size: 11px;
   }
-  .ad-resource > small {
+  .resource-tile > small {
     font-size: 9px;
   }
   .traffic-row {

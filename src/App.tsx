@@ -11,7 +11,7 @@ import { Select } from "radix-ui";
 import { api, groupsOf, useNodes } from "@/lib/api";
 import { loadConfig } from "@/lib/config";
 import { bytes, rate } from "@/lib/format";
-import { AdCard } from "@/components/AdCard";
+import { MonitorCard } from "@/components/MonitorCard";
 
 type Me = {
   authed: boolean;
@@ -165,7 +165,7 @@ export default function App() {
 
   return (
     <div
-      className="ad-app"
+      className="monitor-app"
       data-variant={variant}
       data-motion={motion ? "on" : "off"}
       data-borderlight={borderLightStopped ? "off" : "on"}
@@ -202,14 +202,14 @@ export default function App() {
       {Boolean(config?.notice) && (
         <p className="notice">{String(config?.notice)}</p>
       )}
-      <main id="main" className="ad-main">
+      <main id="main" className="monitor-main">
         {(error || meError) && (
           <p role="alert" className="error-banner">
             数据暂未更新 · {error || meError}
           </p>
         )}
         {open !== null ? (
-          <section className="detail-ad">
+          <section className="node-detail">
             <div className="detail-strip">
               <span>节点资料 · 全部公开指标</span>
               <button onClick={() => go(null)}>
@@ -274,7 +274,7 @@ export default function App() {
               </nav>
             )}
             {config?.show_summary !== false && (
-              <section className="hero-ad" aria-label="节点汇总">
+              <section className="overview-panel" aria-label="节点汇总">
                 <div className="hero-copy">
                   <span className="eyebrow">
                     <Zap size={15} fill="currentColor" /> 服务器实时展销中心
@@ -370,9 +370,9 @@ export default function App() {
                 <a href="/admin/">进入后台 ↗</a>
               </div>
             ) : (
-              <div className="ad-grid">
+              <div className="node-grid">
                 {shown.map((node, index) => (
-                  <AdCard key={node.id} node={node} index={index} onOpen={go} />
+                  <MonitorCard key={node.id} node={node} index={index} onOpen={go} />
                 ))}
               </div>
             )}

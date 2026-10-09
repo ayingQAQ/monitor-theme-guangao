@@ -103,6 +103,8 @@ npm run package
 
 截图更新：先运行演示服务器，再执行 `node scripts/capture.mjs`。脚本仅接受标记为演示数据的页面。
 
+[广告过滤兼容性检查](docs/blocker-compatibility.md) 记录了误隐藏风险、命名调整和模拟测试范围。
+
 [接口检查记录](docs/protocol-audit.md) 列出了测试范围与实测限制。`node scripts/audit-hub.mjs` 可对 `MONITOR_HUB` 指定的公开 Hub 做只读协议检查。
 
 反向代理或 WAF 应放行 `/`、`/node/{id}`、`/favicon.svg` 和 `/apple-touch-icon.png`，以及 Monitor 自身的 API 和后台路径。

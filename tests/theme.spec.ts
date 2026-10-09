@@ -55,7 +55,7 @@ test("ticker moves continuously to the right on desktop and mobile", async ({ pa
 
 test("border light switch controls every light layer and survives reload", async ({ page }) => {
   await page.goto("/");
-  const light = page.locator(".node-ad-border-animate").first();
+  const light = page.locator(".node-border-light").first();
   await expect(light).toHaveCSS("animation-name", "border-run");
   await page.getByRole("button", { name: "关闭边框灯" }).click();
   await expect(light).toHaveCSS("opacity", "0");
@@ -257,12 +257,12 @@ test("visitor variant preference survives reload and invalid saved values fall b
   await page.goto("/");
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
   await page.getByRole("option", { name: "紫绿广告墙" }).click();
-  await expect(page.locator(".ad-app")).toHaveAttribute("data-variant", "neon");
+  await expect(page.locator(".monitor-app")).toHaveAttribute("data-variant", "neon");
   await page.reload();
-  await expect(page.locator(".ad-app")).toHaveAttribute("data-variant", "neon");
+  await expect(page.locator(".monitor-app")).toHaveAttribute("data-variant", "neon");
   await page.evaluate(() => localStorage.setItem("guangao.variant", "invalid"));
   await page.reload();
-  await expect(page.locator(".ad-app")).toHaveAttribute(
+  await expect(page.locator(".monitor-app")).toHaveAttribute(
     "data-variant",
     "promo",
   );
@@ -423,7 +423,7 @@ test("station text is escaped and a config failure uses manifest defaults", asyn
     page.getByText("<img src=x onerror=alert(1)>", { exact: true }),
   ).toBeVisible();
   await expect(page.locator(".notice img")).toHaveCount(0);
-  await expect(page.locator(".ad-app")).toHaveAttribute(
+  await expect(page.locator(".monitor-app")).toHaveAttribute(
     "data-variant",
     "promo",
   );
