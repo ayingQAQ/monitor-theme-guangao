@@ -213,8 +213,8 @@ export function MonitorCard({
         {isFree && (days === null || !Number.isFinite(days)) && (
           <div className="expiry-ticket expiry-free expiry-open">
             <span>免费领用</span>
-            <strong>
-              <InfinityIcon size={20} aria-hidden="true" /> 未设到期
+            <strong aria-label="未设置到期日期">
+              <InfinityIcon size={20} aria-hidden="true" />
             </strong>
           </div>
         )}

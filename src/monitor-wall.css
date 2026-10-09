@@ -2328,7 +2328,7 @@ select:focus-visible {
 .offer-price.is-free > strong svg { flex-shrink: 0; }
 .expiry-free { border-style: solid; border-radius: 50% 48% 46% 50%; transform: rotate(-6deg); }
 .expiry-free:not(.expired) { background: var(--tone); color: var(--tone-ink); }
-.expiry-open strong { display: flex; align-items: center; gap: 3px; font-size: 11px; }
+.expiry-open strong { display: flex; align-items: center; justify-content: center; gap: 3px; font-size: 11px; }
 @media (max-width: 640px) {
   .masthead { flex-wrap: wrap; gap: 10px; }
   .brand { flex: 1 1 calc(100% - 118px); padding: 8px; }

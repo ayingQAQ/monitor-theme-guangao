@@ -48,9 +48,9 @@ test("free offers show their own price and honest expiry labels on desktop and m
     await expect(cards.nth(0).locator(".offer-price > strong")).toHaveText(
       "FREE",
     );
-    await expect(cards.nth(0).locator(".expiry-ticket")).toContainText(
-      "未设到期",
-    );
+    await expect(cards.nth(0).locator(".expiry-open strong")).toHaveText("");
+    await expect(cards.nth(0).locator(".expiry-open strong svg")).toBeVisible();
+    await expect(cards.nth(0).locator(".expiry-ticket")).not.toContainText("未设到期");
     await expect(cards.nth(1).locator(".expiry-ticket")).toContainText(
       "免费有效期",
     );
