@@ -24,6 +24,8 @@
 ## 功能
 
 - 右上角外观设置：三种广告墙皮肤、手绘选择菜单、动效与边框灯开关。
+- 离线节点专属「暂停营业」告示牌，保留离线时长、剩余流量与历史档案入口。
+- 三种皮肤各有默认站点图标；后台上传的自定义图标优先显示。
 - 免费节点专属 FREE 礼物价格标志和期限贴纸，区分到期、过期与未设到期日期。
 - CPU、内存、硬盘、本月剩余流量、上传与下载速度。
 - 分组筛选与对应汇总，费用、账期、到期和离线状态。
@@ -41,6 +43,8 @@ https://github.com/ayingQAQ/monitor-theme-guangao
 ```
 
 也可以从 [最新正式 Release](https://github.com/ayingQAQ/monitor-theme-guangao/releases/latest) 下载 `theme.tar.gz`，在后台上传并选择「广告墙 · Guangao」。请下载主题包，而不是 GitHub 自动生成的 Source code 压缩包。
+
+需要让后台也使用对应图标时，可下载 PNG 后在「站点图标」中上传：[红黄闪电](public/icons/site-promo.png)、[皇家扑克](public/icons/site-royal.png)、[复古显示器](public/icons/site-retro.png)。
 
 ## 开发依据与许可
 

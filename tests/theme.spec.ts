@@ -194,7 +194,7 @@ test("advertisement cards show real values and distinguish offline and pending m
   const offline = page.getByRole("article", { name: "法兰克福 · 欧洲站" });
   await expect(offline.getByText("暂时离线", { exact: true })).toBeVisible();
   await expect(offline.getByText("已过期 2 天")).toBeVisible();
-  await expect(offline.getByText("CPU 不可用")).toBeVisible();
+  await expect(offline.getByText("暂停营业", { exact: true })).toBeVisible();
   await expect(
     page
       .getByRole("article", { name: "首尔 · 新店开张" })

@@ -14,6 +14,7 @@ import { api, groupsOf, useNodes } from "@/lib/api";
 import { loadConfig } from "@/lib/config";
 import { bytes, rate } from "@/lib/format";
 import { MonitorCard } from "@/components/MonitorCard";
+import { useSkinIcon } from "@/lib/skin-icon";
 
 type Me = {
   authed: boolean;
@@ -133,6 +134,7 @@ export default function App() {
       ? sorted
       : sorted.filter((node) => (node.group ?? "") === current);
   const variant = preference || String(config?.variant || "promo");
+  const siteIcon = useSkinIcon(variant);
   const motion = config?.motion !== false && !motionStopped;
   const loading = !nodes || !config;
   const online = shown.filter((node) => node.online).length;
@@ -186,7 +188,7 @@ export default function App() {
           onClick={() => go(null)}
           aria-label="返回广告墙"
         >
-          <img src="/favicon.svg" alt="" width="44" height="44" />
+          <img src={siteIcon} alt="" width="44" height="44" />
           <span>
             <strong>{me.site_name || "广告探针"}</strong>
             <small>SERVER STATUS, LOUD & CLEAR.</small>

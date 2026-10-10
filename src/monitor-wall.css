@@ -2619,3 +2619,80 @@ select:focus-visible {
   .royal-card-fan { right: 14px; bottom: 24px; transform: scale(.6); transform-origin: bottom right; }
   [data-variant="neon"] .hero-burst { display: none; }
 }
+
+/* Offline nodes get a printed closure notice, without growing the card or
+   animating an alarm. Hidden tiles retain the existing resource row sizing. */
+.node-card.is-offline {
+  --offline-ink: #a51d2d;
+  --offline-paper: #fff1dc;
+  --offline-edge: #b42b35;
+  border-color: var(--offline-edge);
+}
+.node-card.is-offline .card-topline {
+  background: var(--offline-ink);
+  color: #fff4d8;
+  border-bottom-color: var(--offline-edge);
+}
+.node-card.is-offline::after {
+  content: "离线";
+  background: var(--offline-paper);
+  color: var(--offline-ink);
+  border: 2px dashed var(--offline-edge);
+  animation: none !important;
+}
+.node-card.is-offline .status-tag::before {
+  background: currentColor;
+  border-radius: 50%;
+}
+.node-card.is-offline .card-resources { position: relative; }
+.node-card.is-offline .resource-tile { visibility: hidden; }
+.offline-notice {
+  position: absolute;
+  inset: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 4px double var(--offline-edge);
+  border-radius: var(--paper-radius);
+  background: var(--offline-paper);
+  color: var(--offline-ink);
+  box-shadow: 2px 3px 0 color-mix(in srgb, var(--offline-edge) 25%, transparent);
+  text-align: center;
+  pointer-events: none;
+}
+.offline-notice::before,
+.offline-notice::after {
+  content: "";
+  position: absolute;
+  inset: 5px auto 5px 5px;
+  width: 6px;
+  background: repeating-linear-gradient(-45deg, var(--offline-edge) 0 4px, transparent 4px 8px);
+}
+.offline-notice::after { left: auto; right: 5px; }
+.offline-kicker { font-size: 9px; font-weight: 800; letter-spacing: 2px; }
+.offline-notice > strong {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 950;
+  line-height: 1.1;
+  letter-spacing: 2px;
+  text-shadow: 1px 2px 0 color-mix(in srgb, var(--offline-edge) 15%, transparent);
+}
+.offline-notice > small { font-size: 10px; line-height: 1.3; }
+.node-card.is-offline .uptime-stamp {
+  color: var(--offline-ink);
+  background: var(--offline-paper);
+  border-color: var(--offline-edge);
+}
+[data-variant="neon"] .node-card.is-offline {
+  --offline-ink: #ffd59f;
+  --offline-paper: #40141e;
+  --offline-edge: #e9c36d;
+}
+[data-variant="neon"] .node-card.is-offline .card-topline { background: #7d2035; }
+[data-variant="retro"] .node-card.is-offline { --offline-paper: #fff; }

@@ -132,6 +132,13 @@ export function MonitorCard({
   const neverSeen =
     node.last_seen_ago === null ||
     (node.last_seen_ago === undefined && !node.last_seen);
+  const offlineTime = neverSeen
+    ? "从未上报"
+    : down === 0
+      ? "刚刚离线"
+      : down < 60
+        ? `离线 ${Math.floor(down)} 秒`
+        : `离线 ${uptime(down)}`;
   const state = !node.online ? "暂时离线" : !m ? "等待首次上报" : "火热在线";
   const labels = [
     "直击现场",
@@ -160,8 +167,8 @@ export function MonitorCard({
       )}
       <div className="card-topline">
         <span>
-          <Flame size={13} />
-          {labels[tone]}
+          {node.online ? <Flame size={13} /> : <Unplug size={13} />}
+          {node.online ? labels[tone] : "离线告示"}
         </span>
         <span className={`status-tag ${m ? "is-live" : ""}`}>{state}</span>
       </div>
@@ -255,6 +262,13 @@ export function MonitorCard({
           foot={m ? pair(m.disk_used, m.disk_total) : "等待指标"}
           icon={<HardDrive size={13} />}
         />
+        {!node.online && (
+          <div className="offline-notice" role="group" aria-label="离线告示">
+            <span className="offline-kicker">节点离线 · OFFLINE</span>
+            <strong><Unplug size={26} aria-hidden="true" /> 暂停营业</strong>
+            <small>{offlineTime} · 历史档案仍可查看</small>
+          </div>
+        )}
       </div>
       <div className="network-deals">
         <div className={`traffic-row ${remaining === 0 ? "is-exhausted" : ""}`}>
@@ -311,13 +325,7 @@ export function MonitorCard({
           )}
           <strong>
             {!node.online
-              ? neverSeen
-                ? "从未上报"
-                : down === 0
-                  ? "刚刚离线"
-                  : down < 60
-                    ? `离线 ${Math.floor(down)} 秒`
-                    : `离线 ${uptime(down)}`
+              ? offlineTime
               : m
                 ? `持续在线 ${uptime(m.uptime)}`
                 : "连接已建立"}
@@ -338,7 +346,7 @@ export function MonitorCard({
             }
           }}
         >
-          立即查看 <ArrowUpRight size={18} />
+          {node.online ? "立即查看" : "查看档案"} <ArrowUpRight size={18} />
         </a>
       </div>
     </article>
