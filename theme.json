@@ -2,7 +2,7 @@
   "name": "广告墙 · Guangao",
   "short": "monitor-theme-guangao",
   "description": "满屏都是广告，点开全是探针。三种高饱和广告墙样式。",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "ayingQAQ",
   "url": "https://github.com/ayingQAQ/monitor-theme-guangao",
   "config": [
@@ -57,6 +57,13 @@
       "type": "boolean",
       "label": "显示网速浮窗",
       "default": true
+    },
+    {
+      "key": "show_value_calculator",
+      "type": "boolean",
+      "label": "显示剩余价值计算器",
+      "default": true,
+      "help": "关闭后隐藏计算器入口；适用于所有外观"
     }
   ]
 }

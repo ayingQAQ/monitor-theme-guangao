@@ -194,7 +194,7 @@ export default function App() {
             <small>SERVER STATUS, LOUD & CLEAR.</small>
           </span>
         </button>
-        <ValueCalculator nodes={sorted} variant={variant} />
+        {config?.show_value_calculator === true && <ValueCalculator nodes={sorted} variant={variant} />}
         <a href="/admin/" className="admin-link">
           {me.authed ? "进入后台" : "站长入口"}
           <ArrowUpRight size={15} />

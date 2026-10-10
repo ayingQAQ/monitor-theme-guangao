@@ -1,6 +1,7 @@
 /// <reference types="node" />
 import assert from "node:assert/strict";
 import { resolveConfig, type ConfigField } from "./config-values.ts";
+import { readFileSync } from "node:fs";
 
 const fields: ConfigField[] = [
   { type: "title" },
@@ -42,6 +43,13 @@ assert.equal(
   true,
 );
 assert.equal(resolveConfig(fields, { motion: "false", notice: 0 }).notice, "");
+const manifest = JSON.parse(readFileSync(new URL('../../theme.json', import.meta.url), 'utf8'));
+const calculatorField = manifest.config.find((field: ConfigField) => field.key === 'show_value_calculator');
+assert.equal(calculatorField?.type, 'boolean');
+assert.equal(resolveConfig(manifest.config, {}).show_value_calculator, true);
+assert.equal(resolveConfig(manifest.config, { show_value_calculator: false }).show_value_calculator, false);
+assert.equal(resolveConfig(manifest.config, { show_value_calculator: true }).show_value_calculator, true);
+assert.equal(resolveConfig(manifest.config, { show_value_calculator: 'false' }).show_value_calculator, true);
 console.log(
   "config defaults, valid selections, bounds and malformed payloads pass",
 );
