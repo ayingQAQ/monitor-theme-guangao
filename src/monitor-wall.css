@@ -2422,6 +2422,10 @@ select:focus-visible {
   --chart-2: #ff779a;
   --chart-3: #81e8cb;
   --chart-4: #cbabff;
+  /* Rebind Tailwind aliases here: inherited aliases resolve against the
+     root palette, which is too dark for the royal detail background. */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
   --ok: #81e8cb;
   --warn: #ff9a9e;
   background-image: radial-gradient(ellipse at 50% 0, #6b19402e, transparent 60%),
