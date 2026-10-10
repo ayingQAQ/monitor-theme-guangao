@@ -11,7 +11,7 @@ test("header settings open by keyboard and retain all preferences", async ({
   await page.keyboard.press("Enter");
   await expect(page.getByRole("dialog", { name: "外观设置" })).toBeVisible();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
-  await page.getByRole("option", { name: "紫绿广告墙" }).click();
+  await page.getByRole("option", { name: "澳门皇家赌场风" }).click();
   await expect(page.locator(".monitor-app")).toHaveAttribute(
     "data-variant",
     "neon",

@@ -2,7 +2,7 @@
   "name": "广告墙 · Guangao",
   "short": "monitor-theme-guangao",
   "description": "满屏都是广告，点开全是探针。三种高饱和广告墙样式。",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "author": "ayingQAQ",
   "url": "https://github.com/ayingQAQ/monitor-theme-guangao",
   "config": [
@@ -18,7 +18,7 @@
         },
         {
           "value": "neon",
-          "label": "紫绿广告墙"
+          "label": "澳门皇家赌场风"
         },
         {
           "value": "retro",

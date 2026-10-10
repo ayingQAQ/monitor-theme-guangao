@@ -12,7 +12,7 @@ await page.getByRole("article").first().waitFor();
 for (const variant of ["promo", "neon", "retro"]) {
   await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
-  await page.getByRole("option", { name: { promo: "红黄促销墙", neon: "紫绿广告墙", retro: "复古 GIF 广告墙" }[variant] }).click();
+  await page.getByRole("option", { name: { promo: "红黄促销墙", neon: "澳门皇家赌场风", retro: "复古 GIF 广告墙" }[variant] }).click();
   await page.locator(`.monitor-app[data-variant="${variant}"]`).waitFor();
   await page.keyboard.press("Escape");
   await page.getByText("演示数据 · 非真实节点", { exact: true }).waitFor();
@@ -41,7 +41,7 @@ await page.screenshot({
 await browser.close();
 await writeFile(
   "docs/previews/README.md",
-  "# Theme previews\n\nAll screenshots use explicitly labeled development fixtures, not real servers.\n\n- promo.png: promotional wall\n- neon.png: violet/lime wall\n- retro.png: retro GIF wall\n- mobile.png: mobile promotional wall\n",
+  "# Theme previews\n\nAll screenshots use explicitly labeled development fixtures, not real servers.\n\n- promo.png: promotional wall\n- neon.png: Royal Macau black/gold wall\n- retro.png: retro GIF wall\n- mobile.png: mobile promotional wall\n",
 );
 console.log(
   "Three desktop previews, mobile preview and opaque Apple icon captured.",

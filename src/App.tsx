@@ -242,7 +242,7 @@ export default function App() {
                     {[
                       ["site", "跟随站点"],
                       ["promo", "红黄促销墙"],
-                      ["neon", "紫绿广告墙"],
+                      ["neon", "澳门皇家赌场风"],
                       ["retro", "复古 GIF 广告墙"],
                     ].map(([value, label]) => (
                       <Select.Item
@@ -365,6 +365,9 @@ export default function App() {
                 className="overview-panel"
                 aria-label="节点汇总"
               >
+                {variant === "neon" && (
+                  <span className="royal-sign" aria-hidden="true">♛ 澳门皇家 · ROYAL MACAU ♛</span>
+                )}
                 <div className="hero-copy">
                   <span className="eyebrow">
                     <Zap size={15} fill="currentColor" /> 服务器实时展销中心

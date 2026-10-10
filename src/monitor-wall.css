@@ -2397,3 +2397,131 @@ select:focus-visible {
 .monitor-app[data-variant="promo"] .tone-3 .speed-row strong {
   color: #92500a;
 }
+
+/* Royal Macau flyer: black velvet, brass print, jewel lights and playing-card seals. */
+.monitor-app[data-variant="neon"] {
+  --ink: #fff0c9;
+  --paper: #1d101b;
+  --wall: #0d080f;
+  --hot: #ff486d;
+  --sun: #f3cd68;
+  --accent: #f3cd68;
+  --card-line: #b99149;
+  --hero-bg: #401221;
+  --hero-text: #ffe49a;
+  --background: #1d101b;
+  --foreground: #fff0c9;
+  --card: #1d101b;
+  --card-foreground: #fff0c9;
+  --primary: #f3cd68;
+  --primary-foreground: #20101a;
+  --muted: #33202c;
+  --muted-foreground: #d1bca7;
+  --border: #786044;
+  --chart-1: #ffd571;
+  --chart-2: #ff779a;
+  --chart-3: #81e8cb;
+  --chart-4: #cbabff;
+  --ok: #81e8cb;
+  --warn: #ff9a9e;
+  background-image: radial-gradient(ellipse at 50% 0, #6b19402e, transparent 60%),
+    repeating-linear-gradient(135deg, #c8a85c0a 0 1px, transparent 1px 16px);
+  background-size: auto, 24px 24px;
+}
+[data-variant="neon"] .top-tape {
+  color: #f3cd68;
+  background: #110911;
+  border-bottom: 1px solid #b99149;
+}
+[data-variant="neon"] .brand,
+[data-variant="neon"] .appearance-panel {
+  border-color: #d5b16a;
+  box-shadow: 3px 4px 0 #090509, inset 0 0 0 3px #b9914924;
+}
+[data-variant="neon"] .overview-panel {
+  border-color: #e6bc62;
+  background: linear-gradient(115deg, #230d19 0%, #5e142d 52%, #261333 100%);
+  box-shadow: 0 0 0 2px #34210f, 4px 6px 0 #090509, inset 0 0 0 6px #e6bc621c;
+}
+[data-variant="neon"] .overview-panel::before {
+  inset: 7px;
+  border: 2px dotted #f6d681;
+  border-radius: inherit;
+  background: repeating-conic-gradient(from -30deg at 82% 52%, transparent 0deg 13deg, #dfb25310 13deg 26deg);
+}
+.royal-sign {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: #f3cd68;
+  font-size: 10px;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+[data-variant="neon"] .hero-copy h1 {
+  color: #ffe49a;
+  text-shadow: 1px 1px 0 #6f3d13, 3px 3px 0 #10070f;
+}
+[data-variant="neon"] .hero-copy p,
+[data-variant="neon"] .eyebrow,
+[data-variant="neon"] .hero-score { color: #fff0c9; }
+[data-variant="neon"] .score-number > strong {
+  color: #ffe49a;
+  -webkit-text-stroke-color: #ad6a23;
+  text-shadow: 4px 4px 0 #10070f;
+}
+[data-variant="neon"] .hero-burst {
+  background: #b91843;
+  color: #fff0c9;
+}
+[data-variant="neon"] .hero-button,
+[data-variant="neon"] .card-foot a {
+  color: #321411;
+  background: linear-gradient(#ffe9a1, #dbab45);
+  border-color: #e9c36d;
+  box-shadow: 2px 3px 0 #080508;
+}
+[data-variant="neon"] .node-card {
+  --tone: #f3cd68;
+  --tone-ink: #28121a;
+  border-color: #d5b16a;
+  background-image: linear-gradient(155deg, #b9914914, transparent 48%);
+  box-shadow: 3px 5px 0 #080508, inset 0 0 0 3px #b991491a;
+}
+[data-variant="neon"] .tone-1,
+[data-variant="neon"] .tone-4 { --tone: #81e8cb; }
+[data-variant="neon"] .tone-2,
+[data-variant="neon"] .tone-5 { --tone: #ff8bbb; }
+[data-variant="neon"] .card-topline {
+  background: linear-gradient(90deg, #5c1729, #271128);
+  color: #f6dc9d;
+  border-bottom-color: #b99149;
+}
+[data-variant="neon"] .card-title h3 {
+  color: #fff0c9;
+  text-shadow: 1px 2px 0 #080508;
+}
+[data-variant="neon"] .offer-price > strong {
+  text-shadow: 2px 3px 0 #080508, 0 0 8px #f3cd681c;
+}
+[data-variant="neon"] .node-card::after {
+  background: #190d15;
+  color: #f3cd68;
+  border-color: #f3cd68;
+  box-shadow: 2px 3px 0 #080508;
+}
+[data-variant="neon"] .tone-0::after { content: "♠ 皇家"; }
+[data-variant="neon"] .tone-1::after { content: "♥ 精选"; }
+[data-variant="neon"] .tone-2::after { content: "♣ 实况"; }
+[data-variant="neon"] .tone-3::after { content: "♦ 招牌"; }
+[data-variant="neon"] .tone-4::after { content: "♠ 档案"; }
+[data-variant="neon"] .tone-5::after { content: "♥ 上新"; }
+[data-variant="neon"] .resource-tile {
+  border-color: #b9914970;
+  background: #1b0e19;
+}
+[data-variant="neon"] .resource-track { background: #33202c; border-color: #786044; box-shadow: none; }
+[data-variant="neon"] .resource-track > span { background: var(--tone); box-shadow: none; }
+@media (max-width: 640px) { .royal-sign { font-size: 8px; letter-spacing: 1px; } }

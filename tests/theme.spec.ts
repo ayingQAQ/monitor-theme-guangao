@@ -261,7 +261,7 @@ test("visitor variant preference survives reload and invalid saved values fall b
   await page.goto("/");
   await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
-  await page.getByRole("option", { name: "紫绿广告墙" }).click();
+  await page.getByRole("option", { name: "澳门皇家赌场风" }).click();
   await expect(page.locator(".monitor-app")).toHaveAttribute("data-variant", "neon");
   await page.reload();
   await expect(page.locator(".monitor-app")).toHaveAttribute("data-variant", "neon");

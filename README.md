@@ -13,9 +13,9 @@
 
 ![红黄促销墙](docs/previews/promo.png)
 
-### 紫绿广告墙
+### 澳门皇家赌场风
 
-![紫绿广告墙](docs/previews/neon.png)
+![澳门皇家赌场风](docs/previews/neon.png)
 
 ### 复古 GIF 广告墙
 
