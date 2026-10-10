@@ -4,7 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 await mkdir("docs/previews", { recursive: true });
 const browser = await chromium.launch();
 const page = await browser.newPage({
-  viewport: { width: 1440, height: 1120 },
+  viewport: { width: 1600, height: 1000 },
   reducedMotion: "reduce",
 });
 await page.goto("http://127.0.0.1:5173/");
@@ -14,14 +14,19 @@ for (const variant of ["promo", "neon", "retro"]) {
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
   await page.getByRole("option", { name: { promo: "红黄促销墙", neon: "澳门皇家赌场风", retro: "复古 GIF 广告墙" }[variant] }).click();
   await page.locator(`.monitor-app[data-variant="${variant}"]`).waitFor();
-  await page.keyboard.press("Escape");
+  await page.getByRole("heading", { level: 1 }).click();
   await page.getByText("演示数据 · 非真实节点", { exact: true }).waitFor();
-  await page.evaluate(() => scrollTo(0, 0));
+  await page.evaluate(async () => { scrollTo(0, 0); await document.fonts.ready; });
   await page.screenshot({
     path: `docs/previews/${variant}.png`,
-    fullPage: true,
+    fullPage: false,
   });
   if (variant === "promo") await page.screenshot({ path: "preview.png" });
+}
+if (process.argv.includes("--desktop-only")) {
+  await browser.close();
+  console.log("Three 1600 × 1000 desktop previews and package preview captured.");
+  process.exit(0);
 }
 await page.getByRole("button", { name: "外观设置", exact: true }).click();
   await page.getByRole("combobox", { name: "广告墙风格" }).click();
