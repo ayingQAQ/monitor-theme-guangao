@@ -19,6 +19,17 @@ for (const variant of ['promo', 'neon', 'retro']) {
       await trigger.click();
       const dialog = page.getByRole('dialog', { name: '剩余价值计算器' });
       await expect(dialog).toBeVisible();
+      await expect(dialog.locator('details')).toHaveCount(0);
+      const receipt = await dialog.locator('.calc-receipt').boundingBox();
+      const fields = await dialog.locator('.calc-form').boundingBox();
+      if (variant === 'retro') expect(receipt!.y).toBeLessThan(fields!.y);
+      else if (width > 640) expect(receipt!.x > fields!.x).toBe(variant === 'promo');
+      expect(await dialog.locator('output').evaluate(el => getComputedStyle(el).fontFamily)).toContain(variant === 'promo' ? 'Guangao Note' : variant === 'neon' ? 'Georgia' : 'Courier New');
+      const amountInput = dialog.getByLabel('续费金额', { exact: true });
+      await amountInput.click();
+      expect(await amountInput.evaluate(el => getComputedStyle(el).outlineStyle)).toBe('none');
+      await page.keyboard.press('Tab');
+      expect(await dialog.getByRole('combobox', { name: '货币', exact: true }).evaluate(el => getComputedStyle(el).outlineStyle)).toBe('none');
       await dialog.getByLabel('续费金额', { exact: true }).fill('200');
       await dialog.getByLabel('周期天数', { exact: true }).fill('365');
       await dialog.getByLabel('交易日期', { exact: true }).fill('2026-01-01');
@@ -65,10 +76,9 @@ test('foreign node changes preserve manual rates, premium and local exports work
   await dialog.getByLabel('售价', { exact: true }).fill('400');
   await expect(dialog.locator('output')).toContainText('¥350.00');
   await expect(dialog.locator('.calc-premium')).toContainText('溢价 ¥50.00');
-  await dialog.locator('summary').click();
-  await dialog.getByLabel('产品名称', { exact: true }).fill('测试|产品');
   await dialog.getByRole('button', { name: '复制 Markdown' }).click();
-  await expect(dialog.getByLabel('Markdown 结果')).toContainText('测试\\|产品');
+  await expect(dialog.getByLabel('Markdown 结果')).toContainText('¥350.00');
+  await expect(dialog.getByLabel('Markdown 结果')).not.toContainText('机房位置');
   const downloadPromise = page.waitForEvent('download');
   await dialog.getByRole('button', { name: '下载图片' }).click();
   const download = await downloadPromise;
@@ -76,7 +86,6 @@ test('foreign node changes preserve manual rates, premium and local exports work
   expect(await download.failure()).toBeNull();
   await dialog.getByRole('button', { name: '重置表单' }).click();
   await expect(dialog.getByLabel('续费金额', { exact: true })).toHaveValue('');
-  await expect(dialog.getByLabel('产品名称', { exact: true })).toHaveValue('');
   await expect(dialog.getByLabel('Markdown 结果')).toHaveCount(0);
 });
 

@@ -1,7 +1,7 @@
 """Build the local note font: python scripts/subset-note-font.py <LongCang-Regular.ttf>.
 
 Requires fonttools and brotli. Source: google/fonts ofl/longcang (SIL OFL 1.1).
-Only built-in notes and labeled demo text are included; other characters fall back
+Only built-in notes, calculator copy and labeled demo text are included; other characters fall back
 to a system handwriting font. The modified subset uses its own family name.
 """
 from pathlib import Path
@@ -11,8 +11,8 @@ from fontTools.ttLib import TTFont
 
 root = Path(__file__).resolve().parent.parent
 text = ''.join((root / file).read_text(encoding='utf-8') for file in
-               ['src/lib/node-remarks.ts', 'dev/fixtures.ts'])
-text += ''.join(chr(code) for code in range(32, 127)) + '，。！？·：；、（）'
+               ['src/lib/node-remarks.ts', 'dev/fixtures.ts', 'src/components/ValueCalculator.tsx', 'src/lib/value-export.ts'])
+text += ''.join(chr(code) for code in range(32, 127)) + '，。！？·：；、（）¥∞核算估价单现算现写'
 font = TTFont(sys.argv[1])
 chars = set(map(ord, text)) & set(font.getBestCmap())
 options = subset.Options()

@@ -1,14 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dialog, Select } from 'radix-ui';
-import { Calculator, Check, ChevronDown, Copy, Download, RotateCcw, X } from 'lucide-react';
+import { Crown, Monitor, Ticket, Check, ChevronDown, Copy, Download, RotateCcw, X } from 'lucide-react';
 import type { Node } from '@/lib/api';
-import { bytes, money } from '@/lib/format';
+import { money } from '@/lib/format';
 import { billingDays, dateDays, premium, remainingValue } from '@/lib/remaining-value';
 import { downloadValueImage, valueMarkdown } from '@/lib/value-export';
 
 const currencies = ['CNY', 'USD', 'EUR', 'GBP', 'HKD', 'JPY', 'CAD', 'AUD', 'SGD', 'CHF'];
 const cycles = [['monthly', '月付 · 30 天'], ['quarterly', '季付 · 90 天'], ['semiannual', '半年付 · 180 天'], ['yearly', '年付 · 365 天'], ['biennial', '两年付 · 730 天'], ['triennial', '三年付 · 1095 天'], ['custom', '自定义周期']];
-const specs = [['vendor', 'VPS 商家'], ['product', '产品名称'], ['feature', '产品特色'], ['cpu', 'CPU'], ['memory', '内存'], ['storage', '存储'], ['bandwidth', '带宽'], ['traffic', '流量限制'], ['location', '机房位置']];
+const styles = {
+  promo: { code: '估值小卖部 / 手写账本', headline: '这台鸡，还值多少？', badge: '现算现写', icon: Ticket },
+  neon: { code: 'MACAU ROYAL / CASHIER', headline: '皇家筹码结算台', badge: 'VIP 估值', icon: Crown },
+  retro: { code: 'GUANGAO DESKTOP / UTILITIES', headline: 'VALUE.EXE', badge: 'LOCAL MODE', icon: Monitor },
+};
 const today = () => {
   const date = new Date();
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -31,12 +35,13 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(initial);
   const [nodeId, setNodeId] = useState('manual');
-  const [config, setConfig] = useState<Record<string, string>>({});
   const [reference, setReference] = useState<{ currency: string; rate: number; date: string } | null>(null);
   const [rateStatus, setRateStatus] = useState('');
   const [feedback, setFeedback] = useState('');
   const [showMarkdown, setShowMarkdown] = useState(false);
   const rateEdited = useRef(false);
+  const style = styles[variant as keyof typeof styles] || styles.promo;
+  const Emblem = style.icon;
   const update = (key: keyof typeof form, value: string) => setForm(previous => ({ ...previous, [key]: value }));
 
   useEffect(() => {
@@ -74,7 +79,6 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
       rateEdited.current = false; setReference(null); setRateStatus(currency === 'CNY' ? '' : '正在查询参考汇率…');
     }
     setForm(previous => ({ ...previous, amount: String(Math.max(0, node.price)), currency, rate: currency === 'CNY' ? '1' : currency === previous.currency ? previous.rate : '', cycle: cycles.some(([key]) => key === node.billing_cycle) ? node.billing_cycle : 'custom', days: days === null ? '' : String(days), expires: node.expires_at?.slice(0, 10) || '' }));
-    setConfig({ product: node.name, cpu: node.cpu_cores > 0 ? `${node.cpu_cores} 核` : '', memory: node.mem_total > 0 ? bytes(node.mem_total) : '', storage: node.disk_total > 0 ? bytes(node.disk_total) : '', traffic: node.traffic_limit > 0 ? bytes(node.traffic_limit) : '不限量', location: node.country });
   };
   const remaining = dateDays(form.trade, form.expires);
   const amount = number(form.amount), rate = number(form.rate), period = number(form.days);
@@ -84,7 +88,6 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
   const rows: [string, string][] = [
     ['交易日期', form.trade], ['到期日期', form.expires], ['续费价格', Number.isFinite(amount) ? money(amount, form.currency) : '—'],
     ['外币汇率', `1 ${form.currency} = ${form.rate} CNY`], ['付款周期', `${form.days} 天`], ['剩余天数', `${Math.max(0, remaining ?? 0)} 天`],
-    ...specs.filter(([key]) => config[key]?.trim()).map(([key, label]): [string, string] => [label, config[key]]),
     ['剩余价值', value === null ? '—' : money(value, 'CNY')],
     ...(markup ? [['售价', money(sale, 'CNY')], ['溢价', `${money(markup.amount, 'CNY')} / ${markup.percent === null ? '基数为零，不计算溢价率' : `${markup.percent.toFixed(1)}%`}`]] as [string, string][] : []),
     ['折算说明', '月付按30天，年付按365天，可改周期天数；超出一周期封顶，未计手续费'],
@@ -97,10 +100,11 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
   };
 
   return <Dialog.Root open={open} onOpenChange={setOpen}>
-    <Dialog.Trigger className="value-trigger" aria-label="剩余价值计算器"><Calculator size={18} /><span>剩余价值</span></Dialog.Trigger>
+    <Dialog.Trigger className="value-trigger" aria-label="剩余价值计算器"><Emblem size={18} /><span>剩余价值</span></Dialog.Trigger>
     <Dialog.Overlay className="value-overlay" />
     <Dialog.Content className="value-calculator">
-      <div className="calc-heading"><span className="calc-emblem" aria-hidden="true"><Calculator size={28} /></span><div><small>VALUE / 明码估值</small><Dialog.Title>剩余价值计算器</Dialog.Title></div><Dialog.Close className="calc-close" aria-label="关闭计算器"><X size={20} /></Dialog.Close></div>
+      <div className="calc-heading"><span className="calc-emblem" aria-hidden="true"><Emblem size={28} /></span><div><small>{style.code}</small><Dialog.Title>剩余价值计算器</Dialog.Title><p className="calc-headline" aria-hidden="true">{style.headline}</p></div><Dialog.Close className="calc-close" aria-label="关闭计算器"><X size={20} /></Dialog.Close></div>
+      <div className="calc-scene" aria-hidden="true"><span className="calc-seal">{style.badge}</span>{variant === 'neon' ? <span className="calc-suits">♠ ♥ ♦ ♣</span> : variant === 'retro' ? <span>文件(F)　计算(C)　帮助(H)<b>▣　─　×</b></span> : <span>一笔一划算清楚 <b>↘</b></span>}</div>
       <Dialog.Description className="calc-description">算清剩余时间，也算清这笔溢价。</Dialog.Description>
       <div className="calc-layout">
         <div className="calc-form">
@@ -118,9 +122,9 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
             <label className="calc-field"><span>交易日期</span><input aria-label="交易日期" type="date" value={form.trade} onChange={event => update('trade', event.target.value)} /></label>
             <label className="calc-field calc-wide"><span>售价（人民币，可选）</span><input aria-label="售价" type="number" min="0" step="any" value={form.sale} onChange={event => update('sale', event.target.value)} placeholder="填入售价，一起算溢价" /></label>
           </div>
-          <details className="calc-specs"><summary>配置备注 · 可选</summary><div className="calc-fields">{specs.map(([key, label]) => <label className="calc-field" key={key}><span>{label}</span><input aria-label={label} maxLength={key === 'feature' ? 20 : 80} value={config[key] || ''} onChange={event => setConfig(previous => ({ ...previous, [key]: event.target.value }))} /></label>)}</div></details>
         </div>
         <div className="calc-receipt">
+          <div className="calc-receipt-art" aria-hidden="true">{variant === 'neon' ? <><i>♠</i><i>♦</i><i>♣</i></> : variant === 'retro' ? <span>GUANGAO VALUE PROCESSOR　[ READY ]</span> : <span>估价单 / ¥<b>核算</b></span>}</div>
           <small className="calc-result-label">剩余价值 · 人民币</small>
           <output aria-live="polite">{value === null ? '—' : money(value, 'CNY')}</output>
           <div className="calc-result-facts"><span>剩余时间 <b>{remaining === null ? '待填写' : `${Math.max(0, remaining)} 天`}</b></span><span>付款周期 <b>{Number.isFinite(period) && period > 0 ? `${period} 天` : '待填写'}</b></span></div>
@@ -131,7 +135,7 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
           {remaining !== null && remaining > period && <p>剩余时间超过一个周期，按一个周期封顶。</p>}
           <p className="calc-footnote">仅按时间折算，未计手续费。表单与导出在本地处理。</p>
           <div className="calc-actions"><button disabled={value === null} onClick={() => void downloadValueImage(rows, variant).catch(() => setFeedback('图片导出失败，请使用 Markdown'))}><Download size={15} />下载图片</button><button disabled={value === null} onClick={() => void copy()}><Copy size={15} />复制 Markdown</button></div>
-          <button className="calc-reset" onClick={() => { setForm(initial()); setNodeId('manual'); setConfig({}); setReference(null); setRateStatus(''); setFeedback(''); setShowMarkdown(false); rateEdited.current = false; }}><RotateCcw size={14} />重置表单</button>
+          <button className="calc-reset" onClick={() => { setForm(initial()); setNodeId('manual'); setReference(null); setRateStatus(''); setFeedback(''); setShowMarkdown(false); rateEdited.current = false; }}><RotateCcw size={14} />重置表单</button>
           <p role="status" className="calc-feedback">{feedback}</p>
         </div>
       </div>

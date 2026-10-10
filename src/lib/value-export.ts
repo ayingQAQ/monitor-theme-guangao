@@ -5,6 +5,8 @@ export function valueMarkdown(rows: [string, string][]) {
 
 /** Draw a local estimate ticket. Node details are never sent to an exporter. */
 export async function downloadValueImage(rows: [string, string][], variant: string) {
+  await document.fonts.ready;
+  const font = variant === 'promo' ? '"Guangao Note", "KaiTi", cursive' : variant === 'neon' ? 'Georgia, "SimSun", serif' : '"Courier New", "SimSun", monospace';
   const palette = variant === 'neon'
     ? { paper: '#24101c', ink: '#ffe3a0', accent: '#f3cd68', stripe: '#741d36' }
     : variant === 'retro'
@@ -13,7 +15,7 @@ export async function downloadValueImage(rows: [string, string][], variant: stri
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   if (!ctx) throw new Error('浏览器不支持图片导出');
-  ctx.font = '24px "Microsoft YaHei", sans-serif';
+  ctx.font = `24px ${font}`;
   const lines = rows.flatMap(([label, value]) => {
     const chunks: string[] = [];
     let chunk = '';
@@ -30,15 +32,15 @@ export async function downloadValueImage(rows: [string, string][], variant: stri
   ctx.strokeStyle = palette.accent; ctx.lineWidth = 6; ctx.strokeRect(12, 12, 876, canvas.height - 24);
   ctx.fillStyle = palette.accent; ctx.fillRect(24, 24, 852, 92);
   ctx.fillStyle = variant === 'neon' ? '#24101c' : '#fff';
-  ctx.font = 'bold 38px "Microsoft YaHei", sans-serif';
+  ctx.font = `38px ${font}`;
   ctx.fillText(variant === 'neon' ? '♠ 皇家估值账单' : variant === 'retro' ? '> VALUE CALCULATOR' : '剩余价值 · 明码估值票', 48, 84);
-  ctx.font = '24px "Microsoft YaHei", sans-serif';
+  ctx.font = `24px ${font}`;
   lines.forEach(([label, value], index) => {
     const y = 165 + index * 54;
     ctx.fillStyle = palette.ink; ctx.fillText(label, 48, y); ctx.fillText(value, 285, y);
     ctx.strokeStyle = palette.stripe; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(48, y + 16); ctx.lineTo(852, y + 16); ctx.stroke();
   });
-  ctx.fillStyle = palette.ink; ctx.font = '18px "Microsoft YaHei", sans-serif';
+  ctx.fillStyle = palette.ink; ctx.font = `18px ${font}`;
   ctx.fillText('按剩余时间折算 · 未计手续费 · Guangao / Monitor', 48, canvas.height - 35);
   const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('图片导出失败')), 'image/png'));
   const url = URL.createObjectURL(blob);
