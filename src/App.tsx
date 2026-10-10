@@ -3,7 +3,6 @@ import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import {
   ArrowLeft,
   ArrowUpRight,
-  Radio,
   Zap,
   ChevronDown,
   Check,
@@ -15,6 +14,7 @@ import { loadConfig } from "@/lib/config";
 import { bytes, rate } from "@/lib/format";
 import { MonitorCard } from "@/components/MonitorCard";
 import { useSkinIcon } from "@/lib/skin-icon";
+import { ValueCalculator } from "@/components/ValueCalculator";
 
 type Me = {
   authed: boolean;
@@ -194,9 +194,7 @@ export default function App() {
             <small>SERVER STATUS, LOUD & CLEAR.</small>
           </span>
         </button>
-        <div className="mast-sticker">
-          <Radio size={15} /> 实时营业中
-        </div>
+        <ValueCalculator nodes={sorted} variant={variant} />
         <a href="/admin/" className="admin-link">
           {me.authed ? "进入后台" : "站长入口"}
           <ArrowUpRight size={15} />

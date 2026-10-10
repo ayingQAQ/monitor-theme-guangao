@@ -28,3 +28,7 @@
 `tests/blocker.spec.ts` 将代表性元素隐藏选择器注入页面，覆盖主内容前缀、广告前缀、节点卡片、广告后缀及 ID 规则。三种皮肤均检查手机主区域、每张卡片及资源数字实际可见，检查边框灯与动效开关、详情跳转与重载、历史图，以及桌面主区域与汇总。
 
 这项验证模拟 CSS 元素隐藏，不等于在 Via、AdGuard 或 uBlock Origin 的所有版本和所有订阅列表上实机验证；用户自定义针对本站的规则仍可能隐藏任何元素。
+
+## 剩余价值计算器
+
+计算器使用中性的 value-trigger、value-calculator、calc-field 等类名。仅打开计算器并选择外币时请求 api.frankfurter.dev/v2/rate/{currency}/cny，不发送节点或表单内容。请求失败可手动输入汇率；人民币与本地 PNG、Markdown 导出无需外部请求。没有新增广告或追踪服务。
