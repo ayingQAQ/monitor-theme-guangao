@@ -2525,3 +2525,93 @@ select:focus-visible {
 [data-variant="neon"] .resource-track { background: #33202c; border-color: #786044; box-shadow: none; }
 [data-variant="neon"] .resource-track > span { background: var(--tone); box-shadow: none; }
 @media (max-width: 640px) { .royal-sign { font-size: 8px; letter-spacing: 1px; } }
+
+.royal-card-fan {
+  position: absolute;
+  right: 280px;
+  bottom: 25px;
+  width: 205px;
+  height: 155px;
+  pointer-events: none;
+}
+.royal-playing-card {
+  position: absolute;
+  left: 56px;
+  bottom: 0;
+  width: 90px;
+  height: 130px;
+  background: #fff5dc;
+  border: 2px solid #d9b566;
+  border-radius: 7px;
+  box-shadow: 3px 4px 0 #08050880, inset 0 0 0 3px #fffdf4;
+  color: #20121a;
+  transform-origin: 50% 115%;
+  transform: rotate(-23deg);
+  font-family: Georgia, "Times New Roman", serif;
+}
+.royal-playing-card:nth-child(2) { transform: rotate(-2deg); }
+.royal-playing-card:nth-child(3) { transform: rotate(20deg); }
+.royal-playing-card.is-red { color: #c3193c; }
+.royal-playing-card small {
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+}
+.royal-playing-card small:last-child {
+  top: auto;
+  left: auto;
+  right: 6px;
+  bottom: 5px;
+  transform: rotate(180deg);
+}
+.royal-playing-card b {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 54px;
+  font-weight: 400;
+}
+[data-variant="neon"] .title-spark {
+  position: relative;
+  flex-shrink: 0;
+  width: 26px;
+  height: 34px;
+  border: 1px solid #d9b566;
+  border-radius: 3px;
+  background: #fff5dc;
+  color: #231420;
+  font-size: 0;
+  transform: rotate(9deg);
+  animation: none !important;
+}
+[data-variant="neon"] .title-spark::before {
+  content: "A";
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  font: bold 9px Georgia, serif;
+}
+[data-variant="neon"] .title-spark::after {
+  content: "♠";
+  position: absolute;
+  inset: 5px 0 0;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+[data-variant="neon"] .tone-1 .title-spark::after,
+[data-variant="neon"] .tone-4 .title-spark::after { content: "♥"; color: #c3193c; }
+[data-variant="neon"] .tone-2 .title-spark::after,
+[data-variant="neon"] .tone-5 .title-spark::after { content: "♦"; color: #c3193c; }
+@media (max-width: 1100px) and (min-width: 641px) {
+  .royal-card-fan { right: 215px; bottom: 15px; transform: scale(.7); transform-origin: bottom right; }
+}
+@media (max-width: 640px) {
+  .royal-card-fan { right: 14px; bottom: 24px; transform: scale(.6); transform-origin: bottom right; }
+  [data-variant="neon"] .hero-burst { display: none; }
+}

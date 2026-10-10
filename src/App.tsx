@@ -366,7 +366,18 @@ export default function App() {
                 aria-label="节点汇总"
               >
                 {variant === "neon" && (
-                  <span className="royal-sign" aria-hidden="true">♛ 澳门皇家 · ROYAL MACAU ♛</span>
+                  <>
+                    <span className="royal-sign" aria-hidden="true">♛ 澳门皇家 · ROYAL MACAU ♛</span>
+                    <div className="royal-card-fan" aria-hidden="true">
+                      {["♠", "♥", "♦"].map((suit) => (
+                        <span className={`royal-playing-card ${suit === "♠" ? "is-black" : "is-red"}`} key={suit}>
+                          <small>A<br />{suit}</small>
+                          <b>{suit}</b>
+                          <small>A<br />{suit}</small>
+                        </span>
+                      ))}
+                    </div>
+                  </>
                 )}
                 <div className="hero-copy">
                   <span className="eyebrow">
