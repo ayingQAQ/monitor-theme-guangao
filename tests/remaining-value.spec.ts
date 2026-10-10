@@ -20,6 +20,11 @@ for (const variant of ['promo', 'neon', 'retro']) {
       const dialog = page.getByRole('dialog', { name: '剩余价值计算器' });
       await expect(dialog).toBeVisible();
       await expect(dialog.locator('details')).toHaveCount(0);
+      if (variant === 'promo') {
+        const paper = await dialog.evaluate(el => getComputedStyle(el).backgroundImage);
+        expect(paper).toContain('radial-gradient');
+        expect(paper).not.toContain('linear-gradient');
+      }
       const receipt = await dialog.locator('.calc-receipt').boundingBox();
       const fields = await dialog.locator('.calc-form').boundingBox();
       if (variant === 'retro') expect(receipt!.y).toBeLessThan(fields!.y);
@@ -35,6 +40,16 @@ for (const variant of ['promo', 'neon', 'retro']) {
       await dialog.getByLabel('交易日期', { exact: true }).fill('2026-01-01');
       await dialog.getByLabel('到期时间', { exact: true }).fill('2026-06-30');
       await expect(dialog.locator('output')).toContainText('¥98.63');
+      await dialog.getByRole('combobox', { name: '货币', exact: true }).click();
+      await page.getByRole('option', { name: 'USD', exact: true }).click();
+      await expect(dialog.getByLabel('外币汇率', { exact: true })).toHaveValue('7.8');
+      await dialog.getByLabel('外币汇率', { exact: true }).fill('6.6944');
+      await dialog.getByLabel('续费金额', { exact: true }).fill('10.9');
+      await dialog.getByLabel('周期天数', { exact: true }).fill('30');
+      await dialog.getByLabel('交易日期', { exact: true }).fill('2026-10-10');
+      await dialog.getByLabel('到期时间', { exact: true }).fill('2027-02-24');
+      await expect(dialog.locator('output')).toContainText('¥333.22');
+      await expect(dialog).not.toContainText('封顶');
       await dialog.getByLabel('周期天数', { exact: true }).fill('0');
       await expect(dialog.locator('output')).toContainText('—');
       await dialog.getByRole('combobox', { name: '选择节点' }).click();

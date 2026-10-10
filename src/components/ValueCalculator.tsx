@@ -90,7 +90,7 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
     ['外币汇率', `1 ${form.currency} = ${form.rate} CNY`], ['付款周期', `${form.days} 天`], ['剩余天数', `${Math.max(0, remaining ?? 0)} 天`],
     ['剩余价值', value === null ? '—' : money(value, 'CNY')],
     ...(markup ? [['售价', money(sale, 'CNY')], ['溢价', `${money(markup.amount, 'CNY')} / ${markup.percent === null ? '基数为零，不计算溢价率' : `${markup.percent.toFixed(1)}%`}`]] as [string, string][] : []),
-    ['折算说明', '月付按30天，年付按365天，可改周期天数；超出一周期封顶，未计手续费'],
+    ['折算说明', '按每周期费用折算全部剩余天数；月付按30天，年付按365天，可改周期天数，未计手续费'],
   ];
   const markdown = valueMarkdown(rows);
   const copy = async () => {
@@ -110,7 +110,7 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
         <div className="calc-form">
           <Choice label="选择节点" value={nodeId === 'manual' || nodes.some(node => String(node.id) === nodeId) ? nodeId : 'manual'} options={[["manual", "手动填写"], ...nodes.map(node => [String(node.id), node.name])]} onChange={selectNode} />
           <div className="calc-fields">
-            <label className="calc-field"><span>续费金额</span><input aria-label="续费金额" type="number" min="0" step="any" value={form.amount} onChange={event => update('amount', event.target.value)} placeholder="例如 200" /></label>
+            <label className="calc-field"><span>续费金额 · 每周期</span><input aria-label="续费金额" type="number" min="0" step="any" value={form.amount} onChange={event => update('amount', event.target.value)} placeholder="一个付款周期的费用" /></label>
             <Choice label="货币" value={form.currency} options={Array.from(new Set([...currencies, form.currency])).map(currency => [currency, currency])} onChange={selectCurrency} />
             <label className="calc-field calc-wide"><span>外币汇率 · 1 {form.currency} 折合人民币</span><input aria-label="外币汇率" type="number" min="0" step="any" value={form.rate} readOnly={form.currency === 'CNY'} onChange={event => { rateEdited.current = true; update('rate', event.target.value); }} /></label>
           </div>
@@ -131,8 +131,7 @@ export function ValueCalculator({ nodes, variant }: { nodes: Node[]; variant: st
           {markup && <div className="calc-premium"><span>售价 {money(sale, 'CNY')}</span><strong>{markup.amount < 0 ? '折价' : '溢价'} {money(Math.abs(markup.amount), 'CNY')}</strong><small>{markup.percent === null ? '剩余价值为零，不计算溢价率' : `${markup.percent.toFixed(1)}%`}</small></div>}
           {value === null && <p>填好费用、汇率、日期与周期，结果即刻更新。</p>}
           {form.sale !== '' && (!Number.isFinite(sale) || sale < 0) && <p role="alert">售价须为非负数。</p>}
-          <p className="calc-method">费用 × 汇率 × 剩余天数 ÷ 周期天数。月付按 30 天，年付按 365 天，可调整周期天数。</p>
-          {remaining !== null && remaining > period && <p>剩余时间超过一个周期，按一个周期封顶。</p>}
+          <p className="calc-method">每周期费用 × 汇率 × 全部剩余天数 ÷ 周期天数。月付按 30 天，年付按 365 天，可调整周期天数；连续续费多个周期也可计算。</p>
           <p className="calc-footnote">仅按时间折算，未计手续费。表单与导出在本地处理。</p>
           <div className="calc-actions"><button disabled={value === null} onClick={() => void downloadValueImage(rows, variant).catch(() => setFeedback('图片导出失败，请使用 Markdown'))}><Download size={15} />下载图片</button><button disabled={value === null} onClick={() => void copy()}><Copy size={15} />复制 Markdown</button></div>
           <button className="calc-reset" onClick={() => { setForm(initial()); setNodeId('manual'); setReference(null); setRateStatus(''); setFeedback(''); setShowMarkdown(false); rateEdited.current = false; }}><RotateCcw size={14} />重置表单</button>

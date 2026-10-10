@@ -22,7 +22,7 @@ export function dateDays(start: string, end: string): number | null {
 
 export function remainingValue(price: number, days: number, remaining: number): number | null {
   if (![price, days, remaining].every(Number.isFinite) || price < 0 || days <= 0) return null;
-  const value = price * (Math.min(days, Math.max(0, remaining)) / days);
+  const value = price * (Math.max(0, remaining) / days);
   return Number.isFinite(value) ? Math.round((value + Number.EPSILON) * 100) / 100 : null;
 }
 

@@ -2823,7 +2823,7 @@ select:focus-visible {
 
 [data-variant="promo"] .value-calculator {
   font-family: "Guangao Note", "KaiTi", cursive;
-  background: linear-gradient(90deg, transparent 35px, #c8473438 35px, #c8473438 37px, transparent 37px), repeating-linear-gradient(#fffbed 0 31px, #d9c9a436 31px 32px);
+  background: radial-gradient(ellipse at 12% 8%, #fffef7, transparent 55%), radial-gradient(ellipse at 85% 95%, #eddfba66, transparent 60%), #fff9e8;
   padding: 28px 28px 28px 52px;
   border: 2px solid #332414;
   box-shadow: 5px 6px 0 #cbbd97, 8px 10px 0 #201809;
@@ -2903,7 +2903,7 @@ select:focus-visible {
 [data-variant="retro"] .calc-feedback { min-height: 0; }
 
 @media (max-width: 640px) {
-  [data-variant="promo"] .value-calculator { padding: 20px 18px 20px 30px; background: repeating-linear-gradient(#fffbed 0 31px, #d9c9a436 31px 32px); }
+  [data-variant="promo"] .value-calculator { padding: 20px 18px 20px 30px; }
   [data-variant="promo"] .calc-headline { font-size: 31px; }
   [data-variant="promo"] .calc-scene > span:last-child { font-size: 20px; }
   [data-variant="neon"] .value-calculator { padding: 18px; }
