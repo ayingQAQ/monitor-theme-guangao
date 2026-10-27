@@ -1,7 +1,7 @@
 {
   "name": "monitor-theme-guangao",
   "private": true,
-  "version": "1.0.6",
+  "version": "1.0.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -37,7 +37,7 @@
     "oxlint": "^1.79.0",
     "prettier": "^3.9.9",
     "typescript": "~6.0.2",
-    "vite": "^8.2.2",
+    "vite": "^8.2.4",
     "ws": "^8.22.0"
   }
 }

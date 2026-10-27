@@ -2952,6 +2952,11 @@ select:focus-visible {
   }
   [data-variant="promo"] .calc-fields { grid-template-columns: minmax(0, 1fr); }
   [data-variant="promo"] .calc-field .theme-select-trigger { gap: 8px; }
-  [data-variant="promo"] .calc-field .theme-select-trigger > span:first-child { white-space: nowrap; }
+  [data-variant="promo"] .calc-field .theme-select-trigger > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   [data-variant="promo"] .calc-field .theme-select-trigger > span:last-child { flex-shrink: 0; }
 }
